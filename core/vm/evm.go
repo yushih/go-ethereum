@@ -24,6 +24,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/params"
+
+    "github.com/ethereum/go-ethereum/core/jvm"
 )
 
 // emptyCodeHash is used by create to ensure deployment is disallowed to already
@@ -181,7 +183,8 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 			evm.vmConfig.Tracer.CaptureEnd(ret, gas-contract.Gas, time.Since(start), err)
 		}()
 	}
-	ret, err = run(evm, contract, input)
+    //ret, err = run(evm, contract, input)
+    jvm.GetJVM().ExecContract(contract.Code, input)
 
 	// When an error was returned by the EVM or when setting the creation code
 	// above we revert to the snapshot and consume any gas remaining. Additionally
@@ -355,7 +358,9 @@ func (evm *EVM) Create(caller ContractRef, code []byte, gas uint64, value *big.I
 	}
 	start := time.Now()
 
-	ret, err = run(evm, contract, nil)
+    //ret, err = run(evm, contract, nil)
+    ret = code
+    err = nil
 
 	// check whether the max code size has been exceeded
 	maxCodeSizeExceeded := evm.ChainConfig().IsEIP158(evm.BlockNumber) && len(ret) > params.MaxCodeSize
