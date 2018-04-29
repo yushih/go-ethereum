@@ -361,6 +361,7 @@ func (evm *EVM) Create(caller ContractRef, code []byte, gas uint64, value *big.I
     //ret, err = run(evm, contract, nil)
     ret = code
     err = nil
+    jvm.GetJVM().Deploy(code, evm.StateDB)
 
 	// check whether the max code size has been exceeded
 	maxCodeSizeExceeded := evm.ChainConfig().IsEIP158(evm.BlockNumber) && len(ret) > params.MaxCodeSize

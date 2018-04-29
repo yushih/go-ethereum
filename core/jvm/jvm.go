@@ -35,6 +35,17 @@ func (self *JVM) initVM() {
 	interpret(self.mainThread, false) //todo
 }
 
+func (self *JVM) Deploy(contractCode []byte, stateDB StateDB) {
+     class := self.classLoader.LoadClassFromBytes(contractCode)
+     obj := class.NewObject()
+     
+     method := class.GetConstructor("()V") 
+     frame := self.mainThread.NewFrame(method)
+     self.mainThread.PushFrame(frame)
+     frame.LocalVars().SetRef(0, obj)
+     interpret(self.mainThread, false)
+     
+}
 
 func (self *JVM) ExecContract(contractCode []byte, input []byte) ([]byte, error) {
      class := self.classLoader.LoadClassFromBytes(contractCode)
