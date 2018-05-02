@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Fetch field from object
 type GET_FIELD struct{ base.Index16Instruction }
 
-func (self *GET_FIELD) Execute(frame *rtda.Frame) {
+func (self *GET_FIELD) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	cp := frame.Method().Class().ConstantPool()
 	fieldRef := cp.GetConstant(self.Index).(*heap.FieldRef)
 	field := fieldRef.ResolvedField()
@@ -40,4 +40,5 @@ func (self *GET_FIELD) Execute(frame *rtda.Frame) {
 	default:
 		// todo
 	}
+    return 100
 }

@@ -6,14 +6,16 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Compare float
 type FCMPG struct{ base.NoOperandsInstruction }
 
-func (self *FCMPG) Execute(frame *rtda.Frame) {
+func (self *FCMPG) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	_fcmp(frame, true)
+    return 100
 }
 
 type FCMPL struct{ base.NoOperandsInstruction }
 
-func (self *FCMPL) Execute(frame *rtda.Frame) {
+func (self *FCMPL) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	_fcmp(frame, false)
+    return 100
 }
 
 func _fcmp(frame *rtda.Frame, gFlag bool) {

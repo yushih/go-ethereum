@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Set field in object
 type PUT_FIELD struct{ base.Index16Instruction }
 
-func (self *PUT_FIELD) Execute(frame *rtda.Frame) {
+func (self *PUT_FIELD) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	currentMethod := frame.Method()
 	currentClass := currentMethod.Class()
 	cp := currentClass.ConstantPool()
@@ -66,4 +66,5 @@ func (self *PUT_FIELD) Execute(frame *rtda.Frame) {
 	default:
 		// todo
 	}
+    return 100
 }

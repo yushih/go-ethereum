@@ -37,7 +37,7 @@ func (self *TABLE_SWITCH) FetchOperands(reader *base.BytecodeReader) {
 	self.jumpOffsets = reader.ReadInt32s(jumpOffsetsCount)
 }
 
-func (self *TABLE_SWITCH) Execute(frame *rtda.Frame) {
+func (self *TABLE_SWITCH) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	index := frame.OperandStack().PopInt()
 
 	var offset int
@@ -48,4 +48,5 @@ func (self *TABLE_SWITCH) Execute(frame *rtda.Frame) {
 	}
 
 	base.Branch(frame, offset)
+    return 100
 }

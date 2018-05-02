@@ -5,9 +5,9 @@ import "github.com/ethereum/go-ethereum/core/jvm/instructions"
 import "github.com/ethereum/go-ethereum/core/jvm/instructions/base"
 import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 
-func interpret(thread *rtda.Thread, logInst bool) {
+func interpret(thread *rtda.Thread, logInst bool, gas uint64) (uint64, error) {
 	defer catchErr(thread)
-	loop(thread, logInst)
+    return loop(thread, logInst, gas)
 }
 
 func catchErr(thread *rtda.Thread) {
@@ -17,7 +17,7 @@ func catchErr(thread *rtda.Thread) {
 	}
 }
 
-func loop(thread *rtda.Thread, logInst bool) {
+func loop(thread *rtda.Thread, logInst bool, gas uint64) (uint64, error) {
 	reader := &base.BytecodeReader{}
 	for {
 		frame := thread.CurrentFrame()
@@ -36,11 +36,20 @@ func loop(thread *rtda.Thread, logInst bool) {
 		}
 
 		// execute
-		inst.Execute(frame)
+        gasConsumed := inst.Execute(frame, gas)
+        if gasConsumed > gas {
+            for !thread.IsStackEmpty() {
+                thread.PopFrame()
+            }
+            return 0, ErrOutOfGas   
+        } else {
+            gas -= gasConsumed
+        }      
 		if thread.IsStackEmpty() {
 			break
 		}
 	}
+    return gas, nil
 }
 
 func logInstruction(frame *rtda.Frame, inst base.Instruction) {

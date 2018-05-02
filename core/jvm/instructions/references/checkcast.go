@@ -9,12 +9,12 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Check whether object is of given type
 type CHECK_CAST struct{ base.Index16Instruction }
 
-func (self *CHECK_CAST) Execute(frame *rtda.Frame) {
+func (self *CHECK_CAST) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	stack := frame.OperandStack()
 	ref := stack.PopRef()
 	stack.PushRef(ref)
 	if ref == nil {
-		return
+		return 100
 	}
 
 	cp := frame.Method().Class().ConstantPool()
@@ -23,4 +23,5 @@ func (self *CHECK_CAST) Execute(frame *rtda.Frame) {
 	if !ref.IsInstanceOf(class) {
 		panic(fmt.Sprintf("java.lang.ClassCastException %p %s %p %s", ref.Class(), ref.Class().Name(), class, class.Name()))
 	}
+    return 100
 }

@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Compare long
 type LCMP struct{ base.NoOperandsInstruction }
 
-func (self *LCMP) Execute(frame *rtda.Frame) {
+func (self *LCMP) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopLong()
 	v1 := stack.PopLong()
@@ -17,4 +17,5 @@ func (self *LCMP) Execute(frame *rtda.Frame) {
 	} else {
 		stack.PushInt(-1)
 	}
+    return 100
 }

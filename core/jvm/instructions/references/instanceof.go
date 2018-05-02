@@ -7,12 +7,12 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Determine if object is of given type
 type INSTANCE_OF struct{ base.Index16Instruction }
 
-func (self *INSTANCE_OF) Execute(frame *rtda.Frame) {
+func (self *INSTANCE_OF) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	stack := frame.OperandStack()
 	ref := stack.PopRef()
 	if ref == nil {
 		stack.PushInt(0)
-		return
+		return 100
 	}
 
 	cp := frame.Method().Class().ConstantPool()
@@ -23,4 +23,5 @@ func (self *INSTANCE_OF) Execute(frame *rtda.Frame) {
 	} else {
 		stack.PushInt(0)
 	}
+    return 100
 }

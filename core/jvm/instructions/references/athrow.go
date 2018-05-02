@@ -8,7 +8,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Throw exception or error
 type ATHROW struct{ base.NoOperandsInstruction }
 
-func (self *ATHROW) Execute(frame *rtda.Frame) {
+func (self *ATHROW) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	ex := frame.OperandStack().PopRef()
 	if ex == nil {
 		panic("java.lang.NullPointerException")
@@ -18,6 +18,7 @@ func (self *ATHROW) Execute(frame *rtda.Frame) {
 	if !findAndGotoExceptionHandler(thread, ex) {
 		handleUncaughtException(thread, ex)
 	}
+    return 100
 }
 
 func findAndGotoExceptionHandler(thread *rtda.Thread, ex *heap.Object) bool {

@@ -14,7 +14,7 @@ import _ "github.com/ethereum/go-ethereum/core/jvm/native/sun/reflect"
 // Invoke native method
 type INVOKE_NATIVE struct{ base.NoOperandsInstruction }
 
-func (self *INVOKE_NATIVE) Execute(frame *rtda.Frame) {
+func (self *INVOKE_NATIVE) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	method := frame.Method()
 	className := method.Class().Name()
 	methodName := method.Name()
@@ -27,4 +27,5 @@ func (self *INVOKE_NATIVE) Execute(frame *rtda.Frame) {
 	}
 
 	nativeMethod(frame)
+    return 100
 }

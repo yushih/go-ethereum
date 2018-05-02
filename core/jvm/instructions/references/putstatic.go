@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Set static field in class
 type PUT_STATIC struct{ base.Index16Instruction }
 
-func (self *PUT_STATIC) Execute(frame *rtda.Frame) {
+func (self *PUT_STATIC) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	currentMethod := frame.Method()
 	currentClass := currentMethod.Class()
 	cp := currentClass.ConstantPool()
@@ -17,7 +17,7 @@ func (self *PUT_STATIC) Execute(frame *rtda.Frame) {
 	if !class.InitStarted() {
 		frame.RevertNextPC()
 		base.InitClass(frame.Thread(), class)
-		return
+		return 100
 	}
 
 	if !field.IsStatic() {
@@ -48,4 +48,5 @@ func (self *PUT_STATIC) Execute(frame *rtda.Frame) {
 	default:
 		// todo
 	}
+    return 100
 }

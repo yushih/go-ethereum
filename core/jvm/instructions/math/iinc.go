@@ -14,9 +14,10 @@ func (self *IINC) FetchOperands(reader *base.BytecodeReader) {
 	self.Const = int32(reader.ReadInt8())
 }
 
-func (self *IINC) Execute(frame *rtda.Frame) {
+func (self *IINC) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	localVars := frame.LocalVars()
 	val := localVars.GetInt(self.Index)
 	val += self.Const
 	localVars.SetInt(self.Index, val)
+    return 100
 }

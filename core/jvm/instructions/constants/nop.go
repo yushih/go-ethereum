@@ -6,6 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Do nothing
 type NOP struct{ base.NoOperandsInstruction }
 
-func (self *NOP) Execute(frame *rtda.Frame) {
+func (self *NOP) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	// really do nothing
+    return 100
 }

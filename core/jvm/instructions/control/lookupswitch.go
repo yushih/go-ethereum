@@ -30,14 +30,15 @@ func (self *LOOKUP_SWITCH) FetchOperands(reader *base.BytecodeReader) {
 	self.matchOffsets = reader.ReadInt32s(self.npairs * 2)
 }
 
-func (self *LOOKUP_SWITCH) Execute(frame *rtda.Frame) {
+func (self *LOOKUP_SWITCH) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	key := frame.OperandStack().PopInt()
 	for i := int32(0); i < self.npairs*2; i += 2 {
 		if self.matchOffsets[i] == key {
 			offset := self.matchOffsets[i+1]
 			base.Branch(frame, int(offset))
-			return
+			return 100
 		}
 	}
 	base.Branch(frame, int(self.defaultOffset))
+    return 100
 }

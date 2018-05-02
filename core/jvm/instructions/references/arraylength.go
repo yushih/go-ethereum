@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Get length of array
 type ARRAY_LENGTH struct{ base.NoOperandsInstruction }
 
-func (self *ARRAY_LENGTH) Execute(frame *rtda.Frame) {
+func (self *ARRAY_LENGTH) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	stack := frame.OperandStack()
 	arrRef := stack.PopRef()
 	if arrRef == nil {
@@ -15,4 +15,5 @@ func (self *ARRAY_LENGTH) Execute(frame *rtda.Frame) {
 
 	arrLen := arrRef.ArrayLength()
 	stack.PushInt(arrLen)
+    return 100
 }

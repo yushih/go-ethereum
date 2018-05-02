@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Invoke a class (static) method
 type INVOKE_STATIC struct{ base.Index16Instruction }
 
-func (self *INVOKE_STATIC) Execute(frame *rtda.Frame) {
+func (self *INVOKE_STATIC) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	cp := frame.Method().Class().ConstantPool()
 	methodRef := cp.GetConstant(self.Index).(*heap.MethodRef)
 	resolvedMethod := methodRef.ResolvedMethod()
@@ -19,8 +19,9 @@ func (self *INVOKE_STATIC) Execute(frame *rtda.Frame) {
 	if !class.InitStarted() {
 		frame.RevertNextPC()
 		base.InitClass(frame.Thread(), class)
-		return
+		return 100
 	}
 
 	base.InvokeMethod(frame, resolvedMethod)
+    return 100
 }

@@ -24,7 +24,7 @@ type NEW_ARRAY struct {
 func (self *NEW_ARRAY) FetchOperands(reader *base.BytecodeReader) {
 	self.atype = reader.ReadUint8()
 }
-func (self *NEW_ARRAY) Execute(frame *rtda.Frame) {
+func (self *NEW_ARRAY) Execute(frame *rtda.Frame, gas uint64) uint64 {
 	stack := frame.OperandStack()
 	count := stack.PopInt()
 	if count < 0 {
@@ -35,6 +35,7 @@ func (self *NEW_ARRAY) Execute(frame *rtda.Frame) {
 	arrClass := getPrimitiveArrayClass(classLoader, self.atype)
 	arr := arrClass.NewArray(uint(count))
 	stack.PushRef(arr)
+    return 100
 }
 
 func getPrimitiveArrayClass(loader *heap.ClassLoader, atype uint8) *heap.Class {
