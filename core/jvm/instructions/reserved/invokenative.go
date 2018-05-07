@@ -25,7 +25,13 @@ func (self *INVOKE_NATIVE) Execute(frame *rtda.Frame, gas uint64) uint64 {
 		methodInfo := className + "." + methodName + methodDescriptor
 		panic("java.lang.UnsatisfiedLinkError: " + methodInfo)
 	}
+    
+    // not elegant at all
+    if (className=="blockchain/Special" && methodName=="gasLeft") {
+        frame.OperandStack().PushLong(int64(gas))
+    }
 
-	nativeMethod(frame)
+  	nativeMethod(frame)
+
     return 100
 }
