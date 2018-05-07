@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-package vm
+package jvm
 
 import (
 	"math/big"
@@ -49,8 +49,6 @@ type Contract struct {
 	caller        ContractRef
 	self          ContractRef
 
-	jumpdests destinations // result of JUMPDEST analysis.
-
 	Code     []byte
 	CodeHash common.Hash
 	CodeAddr *common.Address
@@ -67,13 +65,6 @@ type Contract struct {
 // NewContract returns a new contract environment for the execution of EVM.
 func NewContract(caller ContractRef, object ContractRef, value *big.Int, gas uint64) *Contract {
 	c := &Contract{CallerAddress: caller.Address(), caller: caller, self: object, Args: nil}
-
-	if parent, ok := caller.(*Contract); ok {
-		// Reuse JUMPDEST analysis from parent context if available.
-		c.jumpdests = parent.jumpdests
-	} else {
-		c.jumpdests = make(destinations)
-	}
 
 	// Gas should be a pointer so it can safely be reduced through the run
 	// This pointer will be off the state transition
@@ -95,11 +86,6 @@ func (c *Contract) AsDelegate() *Contract {
 	c.value = parent.value
 
 	return c
-}
-
-// GetOp returns the n'th element in the contract's byte array
-func (c *Contract) GetOp(n uint64) OpCode {
-	return OpCode(c.GetByte(n))
 }
 
 // GetByte returns the n'th byte in the contract's byte array

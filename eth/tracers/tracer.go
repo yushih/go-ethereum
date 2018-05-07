@@ -27,7 +27,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/core/vm"
+	"github.com/ethereum/go-ethereum/core/jvm"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 	duktape "gopkg.in/olebedev/go-duktape.v3"
@@ -68,7 +68,7 @@ func pushBigInt(n *big.Int, ctx *duktape.Context) {
 
 // opWrapper provides a JavaScript wrapper around OpCode.
 type opWrapper struct {
-	op vm.OpCode
+	op jvm.OpCode
 }
 
 // pushObject assembles a JSVM object wrapping a swappable opcode and pushes it
@@ -88,7 +88,7 @@ func (ow *opWrapper) pushObject(vm *duktape.Context) {
 
 // memoryWrapper provides a JavaScript wrapper around vm.Memory.
 type memoryWrapper struct {
-	memory *vm.Memory
+	memory *jvm.Memory
 }
 
 // slice returns the requested range of memory as a byte slice.
@@ -142,7 +142,7 @@ func (mw *memoryWrapper) pushObject(vm *duktape.Context) {
 
 // stackWrapper provides a JavaScript wrapper around vm.Stack.
 type stackWrapper struct {
-	stack *vm.Stack
+	stack *jvm.Stack
 }
 
 // peek returns the nth-from-the-top element of the stack.
@@ -177,7 +177,7 @@ func (sw *stackWrapper) pushObject(vm *duktape.Context) {
 
 // dbWrapper provides a JavaScript wrapper around vm.Database.
 type dbWrapper struct {
-	db vm.StateDB
+	db jvm.StateDB
 }
 
 // pushObject assembles a JSVM object wrapping a swappable database and pushes it
@@ -232,7 +232,7 @@ func (dw *dbWrapper) pushObject(vm *duktape.Context) {
 
 // contractWrapper provides a JavaScript wrapper around vm.Contract
 type contractWrapper struct {
-	contract *vm.Contract
+	contract *jvm.Contract
 }
 
 // pushObject assembles a JSVM object wrapping a swappable contract and pushes it
@@ -366,7 +366,8 @@ func New(code string) (*Tracer, error) {
 		return 1
 	})
 	tracer.vm.PushGlobalGoFunction("isPrecompiled", func(ctx *duktape.Context) int {
-		_, ok := vm.PrecompiledContractsByzantium[common.BytesToAddress(popSlice(ctx))]
+        //_, ok := vm.PrecompiledContractsByzantium[common.BytesToAddress(popSlice(ctx))]
+        ok := true
 		ctx.PushBoolean(ok)
 		return 1
 	})
@@ -510,7 +511,7 @@ func (jst *Tracer) CaptureStart(from common.Address, to common.Address, create b
 }
 
 // CaptureState implements the Tracer interface to trace a single step of VM execution.
-func (jst *Tracer) CaptureState(env *vm.EVM, pc uint64, op vm.OpCode, gas, cost uint64, memory *vm.Memory, stack *vm.Stack, contract *vm.Contract, depth int, err error) error {
+func (jst *Tracer) CaptureState(env *jvm.EVM, pc uint64, op jvm.OpCode, gas, cost uint64, memory *jvm.Memory, stack *jvm.Stack, contract *jvm.Contract, depth int, err error) error {
 	if jst.err == nil {
 		// Initialize the context if it wasn't done yet
 		if !jst.inited {
@@ -548,7 +549,7 @@ func (jst *Tracer) CaptureState(env *vm.EVM, pc uint64, op vm.OpCode, gas, cost 
 
 // CaptureFault implements the Tracer interface to trace an execution fault
 // while running an opcode.
-func (jst *Tracer) CaptureFault(env *vm.EVM, pc uint64, op vm.OpCode, gas, cost uint64, memory *vm.Memory, stack *vm.Stack, contract *vm.Contract, depth int, err error) error {
+func (jst *Tracer) CaptureFault(env *jvm.EVM, pc uint64, op jvm.OpCode, gas, cost uint64, memory *jvm.Memory, stack *jvm.Stack, contract *jvm.Contract, depth int, err error) error {
 	if jst.err == nil {
 		// Apart from the error, everything matches the previous invocation
 		jst.errorValue = new(string)

@@ -44,3 +44,4 @@ profile.cov
 /dashboard/assets/bundle.js
 
 *.class
+*.jar

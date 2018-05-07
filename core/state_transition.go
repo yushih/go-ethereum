@@ -22,7 +22,7 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/vm"
+	"github.com/ethereum/go-ethereum/core/jvm"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
 )
@@ -56,8 +56,8 @@ type StateTransition struct {
 	initialGas uint64
 	value      *big.Int
 	data       []byte
-	state      vm.StateDB
-	evm        *vm.EVM
+	state      jvm.StateDB
+	evm        *jvm.EVM
 }
 
 // Message represents a message sent to a contract.
@@ -95,13 +95,13 @@ func IntrinsicGas(data []byte, contractCreation, homestead bool) (uint64, error)
 		}
 		// Make sure we don't exceed uint64 for all data combinations
 		if (math.MaxUint64-gas)/params.TxDataNonZeroGas < nz {
-			return 0, vm.ErrOutOfGas
+			return 0, jvm.ErrOutOfGas
 		}
 		gas += nz * params.TxDataNonZeroGas
 
 		z := uint64(len(data)) - nz
 		if (math.MaxUint64-gas)/params.TxDataZeroGas < z {
-			return 0, vm.ErrOutOfGas
+			return 0, jvm.ErrOutOfGas
 		}
 		gas += z * params.TxDataZeroGas
 	}
@@ -109,7 +109,7 @@ func IntrinsicGas(data []byte, contractCreation, homestead bool) (uint64, error)
 }
 
 // NewStateTransition initialises and returns a new state transition object.
-func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool) *StateTransition {
+func NewStateTransition(evm *jvm.EVM, msg Message, gp *GasPool) *StateTransition {
 	return &StateTransition{
 		gp:       gp,
 		evm:      evm,
@@ -128,28 +128,28 @@ func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool) *StateTransition 
 // the gas used (which includes gas refunds) and an error if it failed. An error always
 // indicates a core error meaning that the message would always fail for that particular
 // state and would never be accepted within a block.
-func ApplyMessage(evm *vm.EVM, msg Message, gp *GasPool) ([]byte, uint64, bool, error) {
+func ApplyMessage(evm *jvm.EVM, msg Message, gp *GasPool) ([]byte, uint64, bool, error) {
 	return NewStateTransition(evm, msg, gp).TransitionDb()
 }
 
-func (st *StateTransition) from() vm.AccountRef {
+func (st *StateTransition) from() jvm.AccountRef {
 	f := st.msg.From()
 	if !st.state.Exist(f) {
 		st.state.CreateAccount(f)
 	}
-	return vm.AccountRef(f)
+	return jvm.AccountRef(f)
 }
 
-func (st *StateTransition) to() vm.AccountRef {
+func (st *StateTransition) to() jvm.AccountRef {
 	if st.msg == nil {
-		return vm.AccountRef{}
+		return jvm.AccountRef{}
 	}
 	to := st.msg.To()
 	if to == nil {
-		return vm.AccountRef{} // contract creation
+		return jvm.AccountRef{} // contract creation
 	}
 
-	reference := vm.AccountRef(*to)
+	reference := jvm.AccountRef(*to)
 	if !st.state.Exist(*to) {
 		st.state.CreateAccount(*to)
 	}
@@ -158,7 +158,7 @@ func (st *StateTransition) to() vm.AccountRef {
 
 func (st *StateTransition) useGas(amount uint64) error {
 	if st.gas < amount {
-		return vm.ErrOutOfGas
+		return jvm.ErrOutOfGas
 	}
 	st.gas -= amount
 
@@ -241,7 +241,7 @@ func (st *StateTransition) TransitionDb() (ret []byte, usedGas uint64, failed bo
 		// The only possible consensus-error would be if there wasn't
 		// sufficient balance to make the transfer happen. The first
 		// balance transfer may never fail.
-		if vmerr == vm.ErrInsufficientBalance {
+		if vmerr == jvm.ErrInsufficientBalance {
 			return nil, 0, false, vmerr
 		}
 	}

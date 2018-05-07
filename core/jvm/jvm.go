@@ -31,7 +31,7 @@ func newJVM() *JVM {
 
 var jvm = newJVM()
 
-func GetJVM() *JVM {
+func getJVM() *JVM {
      return jvm
 }
 
@@ -41,7 +41,7 @@ func (self *JVM) initVM() {
 	interpret(self.mainThread, false, math.MaxUint64) //todo
 }
 
-func (self *JVM) Deploy(contractCode []byte, contractAddr common.Address, stateDB interf.StateDB, gas uint64) (uint64, error) {
+func (self *JVM) deploy(contractCode []byte, contractAddr common.Address, stateDB interf.StateDB, gas uint64) (uint64, error) {
      class := self.classLoader.LoadClassFromBytes(contractCode)
      obj := class.NewObject()
      
@@ -56,7 +56,7 @@ func (self *JVM) Deploy(contractCode []byte, contractAddr common.Address, stateD
      return gasLeft, err
 }
 
-func (self *JVM) ExecContract(contractCode []byte, input []byte, contractAddr common.Address, stateDB interf.StateDB, gas uint64) ([]byte, uint64, error) {
+func (self *JVM) execContract(contractCode []byte, input []byte, contractAddr common.Address, stateDB interf.StateDB, gas uint64) ([]byte, uint64, error) {
      class := self.classLoader.LoadClassFromBytes(contractCode)
      methodName := string(input) //todo
      method := class.GetInstanceMethod(methodName, "()V") //todo
