@@ -28,13 +28,13 @@ func init() {
 	//	_unsafe(mem_getDouble, "getDouble", "(J)D")
 }
 
-func _unsafe(method func(frame *rtda.Frame), name, desc string) {
+func _unsafe(method func(frame *rtda.Frame, gas uint64, contract interface{}), name, desc string) {
 	native.Register("sun/misc/Unsafe", name, desc, method)
 }
 
 // public native long allocateMemory(long bytes);
 // (J)J
-func allocateMemory(frame *rtda.Frame) {
+func allocateMemory(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	// vars.GetRef(0) // this
 	bytes := vars.GetLong(1)
@@ -46,7 +46,7 @@ func allocateMemory(frame *rtda.Frame) {
 
 // public native long reallocateMemory(long address, long bytes);
 // (JJ)J
-func reallocateMemory(frame *rtda.Frame) {
+func reallocateMemory(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	// vars.GetRef(0) // this
 	address := vars.GetLong(1)
@@ -59,7 +59,7 @@ func reallocateMemory(frame *rtda.Frame) {
 
 // public native void freeMemory(long address);
 // (J)V
-func freeMemory(frame *rtda.Frame) {
+func freeMemory(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	// vars.GetRef(0) // this
 	address := vars.GetLong(1)
@@ -87,7 +87,7 @@ func freeMemory(frame *rtda.Frame) {
 //
 // public native byte getByte(long address);
 // (J)B
-func mem_getByte(frame *rtda.Frame) {
+func mem_getByte(frame *rtda.Frame, gas uint64, contract interface{}) {
 	stack, mem := _get(frame)
 	stack.PushInt(int32(Int8(mem)))
 }
@@ -137,7 +137,7 @@ func mem_getByte(frame *rtda.Frame) {
 //
 // public native void putLong(long address, long x);
 // (JJ)V
-func mem_putLong(frame *rtda.Frame) {
+func mem_putLong(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	// vars.GetRef(0) // this
 	address := vars.GetLong(1)

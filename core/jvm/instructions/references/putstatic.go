@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Set static field in class
 type PUT_STATIC struct{ base.Index16Instruction }
 
-func (self *PUT_STATIC) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *PUT_STATIC) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	currentMethod := frame.Method()
 	currentClass := currentMethod.Class()
 	cp := currentClass.ConstantPool()

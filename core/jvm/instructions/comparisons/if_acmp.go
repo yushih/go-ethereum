@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Branch if reference comparison succeeds
 type IF_ACMPEQ struct{ base.BranchInstruction }
 
-func (self *IF_ACMPEQ) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *IF_ACMPEQ) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	if _acmp(frame) {
 		base.Branch(frame, self.Offset)
 	}
@@ -15,7 +15,7 @@ func (self *IF_ACMPEQ) Execute(frame *rtda.Frame, gas uint64) uint64 {
 
 type IF_ACMPNE struct{ base.BranchInstruction }
 
-func (self *IF_ACMPNE) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *IF_ACMPNE) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	if !_acmp(frame) {
 		base.Branch(frame, self.Offset)
 	}

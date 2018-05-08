@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Multiply double
 type DMUL struct{ base.NoOperandsInstruction }
 
-func (self *DMUL) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *DMUL) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopDouble()
 	v1 := stack.PopDouble()
@@ -18,7 +18,7 @@ func (self *DMUL) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Multiply float
 type FMUL struct{ base.NoOperandsInstruction }
 
-func (self *FMUL) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *FMUL) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopFloat()
 	v1 := stack.PopFloat()
@@ -30,7 +30,7 @@ func (self *FMUL) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Multiply int
 type IMUL struct{ base.NoOperandsInstruction }
 
-func (self *IMUL) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *IMUL) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopInt()
@@ -42,7 +42,7 @@ func (self *IMUL) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Multiply long
 type LMUL struct{ base.NoOperandsInstruction }
 
-func (self *LMUL) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *LMUL) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopLong()
 	v1 := stack.PopLong()

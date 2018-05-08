@@ -17,7 +17,7 @@ func (self *INVOKE_INTERFACE) FetchOperands(reader *base.BytecodeReader) {
 	reader.ReadUint8() // must be 0
 }
 
-func (self *INVOKE_INTERFACE) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *INVOKE_INTERFACE) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	cp := frame.Method().Class().ConstantPool()
 	methodRef := cp.GetConstant(self.index).(*heap.InterfaceMethodRef)
 	resolvedMethod := methodRef.ResolvedInterfaceMethod()

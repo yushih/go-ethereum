@@ -12,7 +12,7 @@ func init() {
 
 // public native String intern();
 // ()Ljava/lang/String;
-func intern(frame *rtda.Frame) {
+func intern(frame *rtda.Frame, gas uint64, contract interface{}) {
 	this := frame.LocalVars().GetThis()
 	interned := heap.InternString(this)
 	frame.OperandStack().PushRef(interned)

@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Load reference from array
 type AALOAD struct{ base.NoOperandsInstruction }
 
-func (self *AALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *AALOAD) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -22,7 +22,7 @@ func (self *AALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Load byte or boolean from array
 type BALOAD struct{ base.NoOperandsInstruction }
 
-func (self *BALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *BALOAD) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -37,7 +37,7 @@ func (self *BALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Load char from array
 type CALOAD struct{ base.NoOperandsInstruction }
 
-func (self *CALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *CALOAD) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -52,7 +52,7 @@ func (self *CALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Load double from array
 type DALOAD struct{ base.NoOperandsInstruction }
 
-func (self *DALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *DALOAD) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -67,7 +67,7 @@ func (self *DALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Load float from array
 type FALOAD struct{ base.NoOperandsInstruction }
 
-func (self *FALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *FALOAD) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -82,7 +82,7 @@ func (self *FALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Load int from array
 type IALOAD struct{ base.NoOperandsInstruction }
 
-func (self *IALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *IALOAD) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -97,7 +97,7 @@ func (self *IALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Load long from array
 type LALOAD struct{ base.NoOperandsInstruction }
 
-func (self *LALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *LALOAD) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()
@@ -112,7 +112,7 @@ func (self *LALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Load short from array
 type SALOAD struct{ base.NoOperandsInstruction }
 
-func (self *SALOAD) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *SALOAD) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	index := stack.PopInt()
 	arrRef := stack.PopRef()

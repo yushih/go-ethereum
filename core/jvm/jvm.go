@@ -23,7 +23,7 @@ func newJVM() *JVM {
 	classLoader := heap.NewClassLoader(cp, true) //todo
 	jvm:= &JVM{
 		classLoader: classLoader,
-		mainThread:  rtda.NewThread(),
+		mainThread:  rtda.NewThread(classLoader),
 	}
     jvm.initVM()
     return jvm
@@ -38,10 +38,11 @@ func getJVM() *JVM {
 func (self *JVM) initVM() {
 	vmClass := self.classLoader.LoadClass("sun/misc/VM")
 	base.InitClass(self.mainThread, vmClass)
-	interpret(self.mainThread, false, math.MaxUint64) //todo
+	interpret(self.mainThread, false, math.MaxUint64, nil) //todo
 }
 
-func (self *JVM) deploy(contractCode []byte, contractAddr common.Address, stateDB interf.StateDB, gas uint64) (uint64, error) {
+func (self *JVM) deploy(contractCode []byte, contractAddr common.Address, stateDB interf.StateDB, contract *Contract) (uint64, error) {
+     gas := contract.Gas
      class := self.classLoader.LoadClassFromBytes(contractCode)
      obj := class.NewObject()
      
@@ -49,14 +50,15 @@ func (self *JVM) deploy(contractCode []byte, contractAddr common.Address, stateD
      frame := self.mainThread.NewFrame(method)
      self.mainThread.PushFrame(frame)
      frame.LocalVars().SetRef(0, obj)
-     gasLeft, err := interpret(self.mainThread, false, gas)
+     gasLeft, err := interpret(self.mainThread, false, gas, contract)
      if err == nil {
          persistObjectGraph(obj, contractAddr, stateDB)
      }
      return gasLeft, err
 }
 
-func (self *JVM) execContract(contractCode []byte, input []byte, contractAddr common.Address, stateDB interf.StateDB, gas uint64) ([]byte, uint64, error) {
+func (self *JVM) execContract(contractCode []byte, input []byte, contractAddr common.Address, stateDB interf.StateDB, contract *Contract) ([]byte, uint64, error) {
+     gas := contract.Gas
      class := self.classLoader.LoadClassFromBytes(contractCode)
      methodName := string(input) //todo
      method := class.GetInstanceMethod(methodName, "()V") //todo
@@ -66,7 +68,7 @@ func (self *JVM) execContract(contractCode []byte, input []byte, contractAddr co
      frame := self.mainThread.NewFrame(method)
      self.mainThread.PushFrame(frame)
      frame.LocalVars().SetRef(0, obj)
-     gasLeft, err := interpret(self.mainThread, false, gas)
+     gasLeft, err := interpret(self.mainThread, false, gas, contract)
      if err == nil {
          persistObjectGraph(obj, contractAddr, stateDB)
      }

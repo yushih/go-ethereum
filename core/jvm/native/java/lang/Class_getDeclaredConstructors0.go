@@ -25,7 +25,7 @@ const _constructorConstructorDescriptor = "" +
 
 // private native Constructor<T>[] getDeclaredConstructors0(boolean publicOnly);
 // (Z)[Ljava/lang/reflect/Constructor;
-func getDeclaredConstructors0(frame *rtda.Frame) {
+func getDeclaredConstructors0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	classObj := vars.GetThis()
 	publicOnly := vars.GetBoolean(1)

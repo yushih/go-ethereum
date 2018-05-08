@@ -16,7 +16,7 @@ func init() {
 
 // private native String canonicalize0(String path) throws IOException;
 // (Ljava/lang/String;)Ljava/lang/String;
-func canonicalize0(frame *rtda.Frame) {
+func canonicalize0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	path := vars.GetRef(1)
 
@@ -33,7 +33,7 @@ func canonicalize0(frame *rtda.Frame) {
 
 // public native int getBooleanAttributes0(File f);
 // (Ljava/io/File;)I
-func getBooleanAttributes0(frame *rtda.Frame) {
+func getBooleanAttributes0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	f := vars.GetRef(1)
 	path := _getPath(f)

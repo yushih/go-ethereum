@@ -6,14 +6,14 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Compare double
 type DCMPG struct{ base.NoOperandsInstruction }
 
-func (self *DCMPG) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *DCMPG) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	_dcmp(frame, true)
     return 100
 }
 
 type DCMPL struct{ base.NoOperandsInstruction }
 
-func (self *DCMPL) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *DCMPL) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	_dcmp(frame, false)
     return 100
 }

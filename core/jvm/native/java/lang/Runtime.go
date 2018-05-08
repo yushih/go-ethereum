@@ -12,7 +12,7 @@ func init() {
 
 // public native int availableProcessors();
 // ()I
-func availableProcessors(frame *rtda.Frame) {
+func availableProcessors(frame *rtda.Frame, gas uint64, contract interface{}) {
 	numCPU := runtime.NumCPU()
 
 	stack := frame.OperandStack()

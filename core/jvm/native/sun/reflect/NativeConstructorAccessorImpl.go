@@ -12,7 +12,7 @@ func init() {
 // private static native Object newInstance0(Constructor<?> c, Object[] os)
 // throws InstantiationException, IllegalArgumentException, InvocationTargetException;
 // (Ljava/lang/reflect/Constructor;[Ljava/lang/Object;)Ljava/lang/Object;
-func newInstance0(frame *rtda.Frame) {
+func newInstance0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	constructorObj := vars.GetRef(0)
 	argArrObj := vars.GetRef(1)

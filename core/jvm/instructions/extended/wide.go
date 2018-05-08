@@ -64,6 +64,6 @@ func (self *WIDE) FetchOperands(reader *base.BytecodeReader) {
 	}
 }
 
-func (self *WIDE) Execute(frame *rtda.Frame, gas uint64) uint64 {
-     return self.modifiedInstruction.Execute(frame, gas)
+func (self *WIDE) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+     return self.modifiedInstruction.Execute(frame, gas, contract)
 }

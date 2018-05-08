@@ -29,7 +29,7 @@ const _methodConstructorDescriptor = "" +
 
 // private native Method[] getDeclaredMethods0(boolean publicOnly);
 // (Z)[Ljava/lang/reflect/Method;
-func getDeclaredMethods0(frame *rtda.Frame) {
+func getDeclaredMethods0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	classObj := vars.GetThis()
 	publicOnly := vars.GetBoolean(1)

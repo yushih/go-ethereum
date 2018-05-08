@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Negate double
 type DNEG struct{ base.NoOperandsInstruction }
 
-func (self *DNEG) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *DNEG) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	val := stack.PopDouble()
 	stack.PushDouble(-val)
@@ -16,7 +16,7 @@ func (self *DNEG) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Negate float
 type FNEG struct{ base.NoOperandsInstruction }
 
-func (self *FNEG) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *FNEG) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	val := stack.PopFloat()
 	stack.PushFloat(-val)
@@ -26,7 +26,7 @@ func (self *FNEG) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Negate int
 type INEG struct{ base.NoOperandsInstruction }
 
-func (self *INEG) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *INEG) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	val := stack.PopInt()
 	stack.PushInt(-val)
@@ -36,7 +36,7 @@ func (self *INEG) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Negate long
 type LNEG struct{ base.NoOperandsInstruction }
 
-func (self *LNEG) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *LNEG) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	val := stack.PopLong()
 	stack.PushLong(-val)

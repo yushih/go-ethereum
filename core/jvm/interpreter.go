@@ -1,23 +1,25 @@
 package jvm
 
 import "fmt"
+
 import "github.com/ethereum/go-ethereum/core/jvm/instructions"
 import "github.com/ethereum/go-ethereum/core/jvm/instructions/base"
 import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 
-func interpret(thread *rtda.Thread, logInst bool, gas uint64) (uint64, error) {
+func interpret(thread *rtda.Thread, logInst bool, gas uint64, contract *Contract) (uint64, error) {
 	defer catchErr(thread)
-    return loop(thread, logInst, gas)
+    return loop(thread, logInst, gas, contract)
 }
 
 func catchErr(thread *rtda.Thread) {
 	if r := recover(); r != nil {
 		logFrames(thread)
+        fmt.Printf("error executing instruction: %v\n", r)
 		panic(r)
 	}
 }
 
-func loop(thread *rtda.Thread, logInst bool, gas uint64) (uint64, error) {
+func loop(thread *rtda.Thread, logInst bool, gas uint64, contract *Contract) (uint64, error) {
 	reader := &base.BytecodeReader{}
 	for {
 		frame := thread.CurrentFrame()
@@ -36,7 +38,7 @@ func loop(thread *rtda.Thread, logInst bool, gas uint64) (uint64, error) {
 		}
 
 		// execute
-        gasConsumed := inst.Execute(frame, gas)
+        gasConsumed := inst.Execute(frame, gas, contract)
         if gasConsumed > gas {
             for !thread.IsStackEmpty() {
                 thread.PopFrame()

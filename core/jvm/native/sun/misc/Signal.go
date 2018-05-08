@@ -8,13 +8,13 @@ func init() {
 	_signal(handle0, "handle0", "(IJ)J")
 }
 
-func _signal(method func(frame *rtda.Frame), name, desc string) {
+func _signal(method func(frame *rtda.Frame, gas uint64, contract interface{}), name, desc string) {
 	native.Register("sun/misc/Signal", name, desc, method)
 }
 
 // private static native int findSignal(String string);
 // (Ljava/lang/String;)I
-func findSignal(frame *rtda.Frame) {
+func findSignal(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	vars.GetRef(0) // name
 
@@ -24,7 +24,7 @@ func findSignal(frame *rtda.Frame) {
 
 // private static native long handle0(int i, long l);
 // (IJ)J
-func handle0(frame *rtda.Frame) {
+func handle0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	// todo
 	vars := frame.LocalVars()
 	vars.GetInt(0)

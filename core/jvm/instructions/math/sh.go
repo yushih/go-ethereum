@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Shift left int
 type ISHL struct{ base.NoOperandsInstruction }
 
-func (self *ISHL) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *ISHL) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopInt()
@@ -19,7 +19,7 @@ func (self *ISHL) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Arithmetic shift right int
 type ISHR struct{ base.NoOperandsInstruction }
 
-func (self *ISHR) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *ISHR) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopInt()
@@ -32,7 +32,7 @@ func (self *ISHR) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Logical shift right int
 type IUSHR struct{ base.NoOperandsInstruction }
 
-func (self *IUSHR) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *IUSHR) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopInt()
@@ -45,7 +45,7 @@ func (self *IUSHR) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Shift left long
 type LSHL struct{ base.NoOperandsInstruction }
 
-func (self *LSHL) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *LSHL) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopLong()
@@ -58,7 +58,7 @@ func (self *LSHL) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Arithmetic shift right long
 type LSHR struct{ base.NoOperandsInstruction }
 
-func (self *LSHR) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *LSHR) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopLong()
@@ -71,7 +71,7 @@ func (self *LSHR) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Logical shift right long
 type LUSHR struct{ base.NoOperandsInstruction }
 
-func (self *LUSHR) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *LUSHR) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopLong()

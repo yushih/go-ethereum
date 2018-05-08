@@ -9,6 +9,6 @@ func init() {
 
 // private static native URL[] getLookupCacheURLs(ClassLoader var0);
 // (Ljava/lang/ClassLoader;)[Ljava/net/URL;
-func getLookupCacheURLs(frame *rtda.Frame) {
+func getLookupCacheURLs(frame *rtda.Frame, gas uint64, contract interface{}) {
 	frame.OperandStack().PushRef(nil)
 }

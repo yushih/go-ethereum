@@ -11,7 +11,7 @@ func init() {
 
 // private static native long set(int d);
 // (I)J
-func set(frame *rtda.Frame) {
+func set(frame *rtda.Frame, gas uint64, contract interface{}) {
 	// todo
 	frame.OperandStack().PushLong(0)
 }

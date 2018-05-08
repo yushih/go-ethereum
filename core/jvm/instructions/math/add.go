@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Add double
 type DADD struct{ base.NoOperandsInstruction }
 
-func (self *DADD) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *DADD) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v1 := stack.PopDouble()
 	v2 := stack.PopDouble()
@@ -18,7 +18,7 @@ func (self *DADD) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Add float
 type FADD struct{ base.NoOperandsInstruction }
 
-func (self *FADD) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *FADD) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopFloat()
 	v1 := stack.PopFloat()
@@ -30,7 +30,7 @@ func (self *FADD) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Add int
 type IADD struct{ base.NoOperandsInstruction }
 
-func (self *IADD) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *IADD) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopInt()
@@ -42,7 +42,7 @@ func (self *IADD) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Add long
 type LADD struct{ base.NoOperandsInstruction }
 
-func (self *LADD) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *LADD) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopLong()
 	v1 := stack.PopLong()

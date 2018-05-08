@@ -14,13 +14,19 @@ JVM
 type Thread struct {
 	pc    int // the address of the instruction currently being executed
 	stack *Stack
+    classLoader *heap.ClassLoader
 	// todo
 }
 
-func NewThread() *Thread {
+func NewThread(classLoader *heap.ClassLoader) *Thread {
 	return &Thread{
 		stack: newStack(1024),
+        classLoader: classLoader,
 	}
+}
+
+func (self *Thread) ClassLoader() *heap.ClassLoader {
+    return self.classLoader
 }
 
 func (self *Thread) PC() int {

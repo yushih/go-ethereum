@@ -14,7 +14,7 @@ func (self *MULTI_ANEW_ARRAY) FetchOperands(reader *base.BytecodeReader) {
 	self.index = reader.ReadUint16()
 	self.dimensions = reader.ReadUint8()
 }
-func (self *MULTI_ANEW_ARRAY) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *MULTI_ANEW_ARRAY) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	cp := frame.Method().Class().ConstantPool()
 	classRef := cp.GetConstant(uint(self.index)).(*heap.ClassRef)
 	arrClass := classRef.ResolvedClass()

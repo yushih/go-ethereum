@@ -149,7 +149,7 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 	contract.SetCallCode(&addr, evm.StateDB.GetCodeHash(addr), evm.StateDB.GetCode(addr))
 
     //ret, err = run(evm, contract, input)
-    ret, gasLeft, err := getJVM().execContract(contract.Code, input, addr, evm.StateDB, contract.Gas)
+    ret, gasLeft, err := getJVM().execContract(contract.Code, input, addr, evm.StateDB, contract)
 
 	// When an error was returned by the EVM or when setting the creation code
 	// above we revert to the snapshot and consume any gas remaining. Additionally
@@ -312,7 +312,7 @@ func (evm *EVM) Create(caller ContractRef, code []byte, gas uint64, value *big.I
 
     //ret, err = run(evm, contract, nil)
     ret = code
-    gasLeft, err := getJVM().deploy(code, contractAddr, evm.StateDB, contract.Gas)
+    gasLeft, err := getJVM().deploy(code, contractAddr, evm.StateDB, contract)
     contract.UseGas(contract.Gas-gasLeft)
 
 	// check whether the max code size has been exceeded

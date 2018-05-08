@@ -24,7 +24,7 @@ type NEW_ARRAY struct {
 func (self *NEW_ARRAY) FetchOperands(reader *base.BytecodeReader) {
 	self.atype = reader.ReadUint8()
 }
-func (self *NEW_ARRAY) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *NEW_ARRAY) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	count := stack.PopInt()
 	if count < 0 {

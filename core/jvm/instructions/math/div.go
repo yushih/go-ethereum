@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Divide double
 type DDIV struct{ base.NoOperandsInstruction }
 
-func (self *DDIV) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *DDIV) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopDouble()
 	v1 := stack.PopDouble()
@@ -18,7 +18,7 @@ func (self *DDIV) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Divide float
 type FDIV struct{ base.NoOperandsInstruction }
 
-func (self *FDIV) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *FDIV) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopFloat()
 	v1 := stack.PopFloat()
@@ -30,7 +30,7 @@ func (self *FDIV) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Divide int
 type IDIV struct{ base.NoOperandsInstruction }
 
-func (self *IDIV) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *IDIV) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopInt()
@@ -46,7 +46,7 @@ func (self *IDIV) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Divide long
 type LDIV struct{ base.NoOperandsInstruction }
 
-func (self *LDIV) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *LDIV) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopLong()
 	v1 := stack.PopLong()

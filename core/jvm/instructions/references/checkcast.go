@@ -9,7 +9,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Check whether object is of given type
 type CHECK_CAST struct{ base.Index16Instruction }
 
-func (self *CHECK_CAST) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *CHECK_CAST) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	ref := stack.PopRef()
 	stack.PushRef(ref)

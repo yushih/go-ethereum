@@ -28,7 +28,7 @@ func init() {
 
 // static native Class<?> getPrimitiveClass(String name);
 // (Ljava/lang/String;)Ljava/lang/Class;
-func getPrimitiveClass(frame *rtda.Frame) {
+func getPrimitiveClass(frame *rtda.Frame, gas uint64, contract interface{}) {
 	nameObj := frame.LocalVars().GetRef(0)
 	name := heap.GoString(nameObj)
 
@@ -40,7 +40,7 @@ func getPrimitiveClass(frame *rtda.Frame) {
 
 // private native String getName0();
 // ()Ljava/lang/String;
-func getName0(frame *rtda.Frame) {
+func getName0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	this := frame.LocalVars().GetThis()
 	class := this.Extra().(*heap.Class)
 
@@ -52,14 +52,14 @@ func getName0(frame *rtda.Frame) {
 
 // private static native boolean desiredAssertionStatus0(Class<?> clazz);
 // (Ljava/lang/Class;)Z
-func desiredAssertionStatus0(frame *rtda.Frame) {
+func desiredAssertionStatus0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	// todo
 	frame.OperandStack().PushBoolean(false)
 }
 
 // public native boolean isInterface();
 // ()Z
-func isInterface(frame *rtda.Frame) {
+func isInterface(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	this := vars.GetThis()
 	class := this.Extra().(*heap.Class)
@@ -70,7 +70,7 @@ func isInterface(frame *rtda.Frame) {
 
 // public native boolean isPrimitive();
 // ()Z
-func isPrimitive(frame *rtda.Frame) {
+func isPrimitive(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	this := vars.GetThis()
 	class := this.Extra().(*heap.Class)
@@ -84,7 +84,7 @@ func isPrimitive(frame *rtda.Frame) {
 //                                         Class<?> caller)
 //     throws ClassNotFoundException;
 // (Ljava/lang/String;ZLjava/lang/ClassLoader;Ljava/lang/Class;)Ljava/lang/Class;
-func forName0(frame *rtda.Frame) {
+func forName0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	jName := vars.GetRef(0)
 	initialize := vars.GetBoolean(1)
@@ -109,7 +109,7 @@ func forName0(frame *rtda.Frame) {
 
 // public native int getModifiers();
 // ()I
-func getModifiers(frame *rtda.Frame) {
+func getModifiers(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	this := vars.GetThis()
 	class := this.Extra().(*heap.Class)
@@ -121,7 +121,7 @@ func getModifiers(frame *rtda.Frame) {
 
 // public native Class<? super T> getSuperclass();
 // ()Ljava/lang/Class;
-func getSuperclass(frame *rtda.Frame) {
+func getSuperclass(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	this := vars.GetThis()
 	class := this.Extra().(*heap.Class)
@@ -137,7 +137,7 @@ func getSuperclass(frame *rtda.Frame) {
 
 // private native Class<?>[] getInterfaces0();
 // ()[Ljava/lang/Class;
-func getInterfaces0(frame *rtda.Frame) {
+func getInterfaces0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	this := vars.GetThis()
 	class := this.Extra().(*heap.Class)
@@ -150,7 +150,7 @@ func getInterfaces0(frame *rtda.Frame) {
 
 // public native boolean isArray();
 // ()Z
-func isArray(frame *rtda.Frame) {
+func isArray(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	this := vars.GetThis()
 	class := this.Extra().(*heap.Class)
@@ -160,7 +160,7 @@ func isArray(frame *rtda.Frame) {
 
 // public native Class<?> getComponentType();
 // ()Ljava/lang/Class;
-func getComponentType(frame *rtda.Frame) {
+func getComponentType(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	this := vars.GetThis()
 	class := this.Extra().(*heap.Class)
@@ -173,7 +173,7 @@ func getComponentType(frame *rtda.Frame) {
 
 // public native boolean isAssignableFrom(Class<?> cls);
 // (Ljava/lang/Class;)Z
-func isAssignableFrom(frame *rtda.Frame) {
+func isAssignableFrom(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	this := vars.GetThis()
 	cls := vars.GetRef(1)

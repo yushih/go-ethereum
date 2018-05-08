@@ -13,7 +13,7 @@ func init() {
 
 // private native void writeBytes(byte b[], int off, int len, boolean append) throws IOException;
 // ([BIIZ)V
-func writeBytes(frame *rtda.Frame) {
+func writeBytes(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	//this := vars.GetRef(0)
 	b := vars.GetRef(1)

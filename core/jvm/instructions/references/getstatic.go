@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Get static field from class
 type GET_STATIC struct{ base.Index16Instruction }
 
-func (self *GET_STATIC) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *GET_STATIC) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	cp := frame.Method().Class().ConstantPool()
 	fieldRef := cp.GetConstant(self.Index).(*heap.FieldRef)
 	field := fieldRef.ResolvedField()

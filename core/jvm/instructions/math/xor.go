@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Boolean XOR int
 type IXOR struct{ base.NoOperandsInstruction }
 
-func (self *IXOR) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *IXOR) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v1 := stack.PopInt()
 	v2 := stack.PopInt()
@@ -18,7 +18,7 @@ func (self *IXOR) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Boolean XOR long
 type LXOR struct{ base.NoOperandsInstruction }
 
-func (self *LXOR) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *LXOR) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v1 := stack.PopLong()
 	v2 := stack.PopLong()

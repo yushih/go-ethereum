@@ -14,7 +14,7 @@ import _ "github.com/ethereum/go-ethereum/core/jvm/native/sun/reflect"
 // Invoke native method
 type INVOKE_NATIVE struct{ base.NoOperandsInstruction }
 
-func (self *INVOKE_NATIVE) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *INVOKE_NATIVE) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	method := frame.Method()
 	className := method.Class().Name()
 	methodName := method.Name()
@@ -25,13 +25,8 @@ func (self *INVOKE_NATIVE) Execute(frame *rtda.Frame, gas uint64) uint64 {
 		methodInfo := className + "." + methodName + methodDescriptor
 		panic("java.lang.UnsatisfiedLinkError: " + methodInfo)
 	}
-    
-    // not elegant at all
-    if (className=="blockchain/Special" && methodName=="gasLeft") {
-        frame.OperandStack().PushLong(int64(gas))
-    }
 
-  	nativeMethod(frame)
+  	nativeMethod(frame, gas, contract)
 
     return 100
 }

@@ -23,7 +23,7 @@ const _fieldConstructorDescriptor = "" +
 
 // private native Field[] getDeclaredFields0(boolean publicOnly);
 // (Z)[Ljava/lang/reflect/Field;
-func getDeclaredFields0(frame *rtda.Frame) {
+func getDeclaredFields0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	classObj := vars.GetThis()
 	publicOnly := vars.GetBoolean(1)

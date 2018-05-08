@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Remainder double
 type DREM struct{ base.NoOperandsInstruction }
 
-func (self *DREM) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *DREM) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopDouble()
 	v1 := stack.PopDouble()
@@ -19,7 +19,7 @@ func (self *DREM) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Remainder float
 type FREM struct{ base.NoOperandsInstruction }
 
-func (self *FREM) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *FREM) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopFloat()
 	v1 := stack.PopFloat()
@@ -31,7 +31,7 @@ func (self *FREM) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Remainder int
 type IREM struct{ base.NoOperandsInstruction }
 
-func (self *IREM) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *IREM) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopInt()
@@ -47,7 +47,7 @@ func (self *IREM) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Remainder long
 type LREM struct{ base.NoOperandsInstruction }
 
-func (self *LREM) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *LREM) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopLong()
 	v1 := stack.PopLong()

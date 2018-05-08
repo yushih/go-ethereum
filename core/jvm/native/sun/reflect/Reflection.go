@@ -12,7 +12,7 @@ func init() {
 
 // public static native Class<?> getCallerClass();
 // ()Ljava/lang/Class;
-func getCallerClass(frame *rtda.Frame) {
+func getCallerClass(frame *rtda.Frame, gas uint64, contract interface{}) {
 	// top0 is sun/reflect/Reflection
 	// top1 is the caller of getCallerClass()
 	// top2 is the caller of method
@@ -23,7 +23,7 @@ func getCallerClass(frame *rtda.Frame) {
 
 // public static native int getClassAccessFlags(Class<?> type);
 // (Ljava/lang/Class;)I
-func getClassAccessFlags(frame *rtda.Frame) {
+func getClassAccessFlags(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	_type := vars.GetRef(0)
 

@@ -10,7 +10,7 @@ func init() {
 
 // private static native void initialize();
 // ()V
-func initialize(frame *rtda.Frame) {
+func initialize(frame *rtda.Frame, gas uint64, contract interface{}) {
 	classLoader := frame.Method().Class().Loader()
 	jlSysClass := classLoader.LoadClass("java/lang/System")
 	initSysClass := jlSysClass.GetStaticMethod("initializeSystemClass", "()V")

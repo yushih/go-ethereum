@@ -11,7 +11,7 @@ type GOTO_W struct {
 func (self *GOTO_W) FetchOperands(reader *base.BytecodeReader) {
 	self.offset = int(reader.ReadInt32())
 }
-func (self *GOTO_W) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *GOTO_W) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	base.Branch(frame, self.offset)
     return 100
 }

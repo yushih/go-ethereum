@@ -7,6 +7,6 @@ func init() {
 	native.Register("java/util/concurrent/atomic/AtomicLong", "VMSupportsCS8", "()Z", vmSupportsCS8)
 }
 
-func vmSupportsCS8(frame *rtda.Frame) {
+func vmSupportsCS8(frame *rtda.Frame, gas uint64, contract interface{}) {
 	frame.OperandStack().PushBoolean(false)
 }

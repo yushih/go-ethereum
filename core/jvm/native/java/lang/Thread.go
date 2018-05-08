@@ -12,7 +12,7 @@ func init() {
 
 // public static native Thread currentThread();
 // ()Ljava/lang/Thread;
-func currentThread(frame *rtda.Frame) {
+func currentThread(frame *rtda.Frame, gas uint64, contract interface{}) {
 	//jThread := frame.Thread().JThread()
 	classLoader := frame.Method().Class().Loader()
 	threadClass := classLoader.LoadClass("java/lang/Thread")
@@ -29,7 +29,7 @@ func currentThread(frame *rtda.Frame) {
 
 // private native void setPriority0(int newPriority);
 // (I)V
-func setPriority0(frame *rtda.Frame) {
+func setPriority0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	// vars := frame.LocalVars()
 	// this := vars.GetThis()
 	// newPriority := vars.GetInt(1))
@@ -38,7 +38,7 @@ func setPriority0(frame *rtda.Frame) {
 
 // public final native boolean isAlive();
 // ()Z
-func isAlive(frame *rtda.Frame) {
+func isAlive(frame *rtda.Frame, gas uint64, contract interface{}) {
 	//vars := frame.LocalVars()
 	//this := vars.GetThis()
 
@@ -48,6 +48,6 @@ func isAlive(frame *rtda.Frame) {
 
 // private native void start0();
 // ()V
-func start0(frame *rtda.Frame) {
+func start0(frame *rtda.Frame, gas uint64, contract interface{}) {
 	// todo
 }

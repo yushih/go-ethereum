@@ -19,7 +19,7 @@ func init() {
 // @CallerSensitive
 // public static native <T> T doPrivileged(PrivilegedAction<T> action);
 // (Ljava/security/PrivilegedAction;)Ljava/lang/Object;
-func doPrivileged(frame *rtda.Frame) {
+func doPrivileged(frame *rtda.Frame, gas uint64, contract interface{}) {
 	vars := frame.LocalVars()
 	action := vars.GetRef(0)
 
@@ -32,7 +32,7 @@ func doPrivileged(frame *rtda.Frame) {
 
 // private static native AccessControlContext getStackAccessControlContext();
 // ()Ljava/security/AccessControlContext;
-func getStackAccessControlContext(frame *rtda.Frame) {
+func getStackAccessControlContext(frame *rtda.Frame, gas uint64, contract interface{}) {
 	// todo
 	frame.OperandStack().PushRef(nil)
 }

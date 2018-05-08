@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Subtract double
 type DSUB struct{ base.NoOperandsInstruction }
 
-func (self *DSUB) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *DSUB) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopDouble()
 	v1 := stack.PopDouble()
@@ -18,7 +18,7 @@ func (self *DSUB) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Subtract float
 type FSUB struct{ base.NoOperandsInstruction }
 
-func (self *FSUB) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *FSUB) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopFloat()
 	v1 := stack.PopFloat()
@@ -30,7 +30,7 @@ func (self *FSUB) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Subtract int
 type ISUB struct{ base.NoOperandsInstruction }
 
-func (self *ISUB) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *ISUB) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopInt()
@@ -42,7 +42,7 @@ func (self *ISUB) Execute(frame *rtda.Frame, gas uint64) uint64 {
 // Subtract long
 type LSUB struct{ base.NoOperandsInstruction }
 
-func (self *LSUB) Execute(frame *rtda.Frame, gas uint64) uint64 {
+func (self *LSUB) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopLong()
 	v1 := stack.PopLong()
