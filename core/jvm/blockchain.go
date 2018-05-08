@@ -14,7 +14,22 @@ func init() {
     native.Register("blockchain/Special", "msgValue", "()J", msgValue)
     native.Register("blockchain/Special", "txOrigin", "()Lblockchain/types/Address;", txOrigin)
     native.Register("blockchain/Special", "gasPrice", "()J", gasPrice)
-    native.Register("blockcahin/Special", "thisAddr", "()Lblockchain/types/Address;", thisAddr)
+    native.Register("blockchain/Special", "thisAddr", "()Lblockchain/types/Address;", thisAddr)
+
+    native.Register("blockchain/types/Address", "balance", "()J", balance)
+    native.Register("blockchain/types/Address", "transfer", "(J)V", transfer)
+}
+
+func balance(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
+     addrObj := frame.LocalVars().GetRef(0)
+     addr := getAddressFromObject(addrObj)
+     v := evm.(*EVM).StateDB.GetBalance(addr)
+
+     vi64 := v.Int64()
+     frame.OperandStack().PushLong(vi64)
+}
+
+func transfer(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 }
 
 func thisAddr(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
@@ -68,4 +83,21 @@ func addressToObject(addr common.Address, classLoader *heap.ClassLoader) *heap.O
          arr.Bytes()[i] = int8(addr[i])
      }
      return obj
+}
+
+func getAddressFromObject(obj *heap.Object) common.Address {
+     var arr *heap.Object;
+
+     for _, field := range(obj.Class().Fields()) {
+         if !field.IsStatic() && field.Name()=="bytes" && field.Descriptor()=="[B" {
+             arr = obj.Fields().GetRef(field.SlotId())
+         }
+     }
+
+     var addr common.Address
+     for i:=0; i<common.AddressLength; i++ {
+         addr[i] = byte(arr.Bytes()[i])
+     }
+
+     return addr
 }
