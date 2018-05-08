@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Create new array of reference
 type ANEW_ARRAY struct{ base.Index16Instruction }
 
-func (self *ANEW_ARRAY) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *ANEW_ARRAY) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	cp := frame.Method().Class().ConstantPool()
 	classRef := cp.GetConstant(self.Index).(*heap.ClassRef)
 	componentClass := classRef.ResolvedClass()

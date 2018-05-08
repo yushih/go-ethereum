@@ -8,7 +8,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Throw exception or error
 type ATHROW struct{ base.NoOperandsInstruction }
 
-func (self *ATHROW) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *ATHROW) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	ex := frame.OperandStack().PopRef()
 	if ex == nil {
 		panic("java.lang.NullPointerException")

@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Invoke instance method; dispatch based on class
 type INVOKE_VIRTUAL struct{ base.Index16Instruction }
 
-func (self *INVOKE_VIRTUAL) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *INVOKE_VIRTUAL) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	currentClass := frame.Method().Class()
 	cp := currentClass.ConstantPool()
 	methodRef := cp.GetConstant(self.Index).(*heap.MethodRef)

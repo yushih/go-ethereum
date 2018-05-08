@@ -15,7 +15,7 @@ func init() {
 
 // public final native Class<?> getClass();
 // ()Ljava/lang/Class;
-func getClass(frame *rtda.Frame, gas uint64, contract interface{}) {
+func getClass(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	this := frame.LocalVars().GetThis()
 	class := this.Class().JClass()
 	frame.OperandStack().PushRef(class)
@@ -23,7 +23,7 @@ func getClass(frame *rtda.Frame, gas uint64, contract interface{}) {
 
 // public native int hashCode();
 // ()I
-func hashCode(frame *rtda.Frame, gas uint64, contract interface{}) {
+func hashCode(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	this := frame.LocalVars().GetThis()
 	hash := int32(uintptr(unsafe.Pointer(this)))
 	frame.OperandStack().PushInt(hash)
@@ -31,7 +31,7 @@ func hashCode(frame *rtda.Frame, gas uint64, contract interface{}) {
 
 // protected native Object clone() throws CloneNotSupportedException;
 // ()Ljava/lang/Object;
-func clone(frame *rtda.Frame, gas uint64, contract interface{}) {
+func clone(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	this := frame.LocalVars().GetThis()
 
 	cloneable := this.Class().Loader().LoadClass("java/lang/Cloneable")
@@ -44,6 +44,6 @@ func clone(frame *rtda.Frame, gas uint64, contract interface{}) {
 
 // public final native void notifyAll();
 // ()V
-func notifyAll(frame *rtda.Frame, gas uint64, contract interface{}) {
+func notifyAll(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	// todo
 }

@@ -7,7 +7,7 @@ func init() {
 	native.Register("sun/io/Win32ErrorMode", "setErrorMode", "(J)J", setErrorMode)
 }
 
-func setErrorMode(frame *rtda.Frame, gas uint64, contract interface{}) {
+func setErrorMode(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	// todo
 	frame.OperandStack().PushLong(0)
 }

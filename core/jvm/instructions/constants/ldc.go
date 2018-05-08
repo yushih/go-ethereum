@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Push item from run-time constant pool
 type LDC struct{ base.Index8Instruction }
 
-func (self *LDC) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *LDC) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	_ldc(frame, self.Index)
     return 100
 }
@@ -15,7 +15,7 @@ func (self *LDC) Execute(frame *rtda.Frame, gas uint64, contract interface{}) ui
 // Push item from run-time constant pool (wide index)
 type LDC_W struct{ base.Index16Instruction }
 
-func (self *LDC_W) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *LDC_W) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	_ldc(frame, self.Index)
     return 100
 }
@@ -46,7 +46,7 @@ func _ldc(frame *rtda.Frame, index uint) {
 // Push long or double from run-time constant pool (wide index)
 type LDC2_W struct{ base.Index16Instruction }
 
-func (self *LDC2_W) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *LDC2_W) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	stack := frame.OperandStack()
 	cp := frame.Method().Class().ConstantPool()
 	c := cp.GetConstant(self.Index)

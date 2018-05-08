@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Convert float to double
 type F2D struct{ base.NoOperandsInstruction }
 
-func (self *F2D) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *F2D) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	stack := frame.OperandStack()
 	f := stack.PopFloat()
 	d := float64(f)
@@ -17,7 +17,7 @@ func (self *F2D) Execute(frame *rtda.Frame, gas uint64, contract interface{}) ui
 // Convert float to int
 type F2I struct{ base.NoOperandsInstruction }
 
-func (self *F2I) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *F2I) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	stack := frame.OperandStack()
 	f := stack.PopFloat()
 	i := int32(f)
@@ -28,7 +28,7 @@ func (self *F2I) Execute(frame *rtda.Frame, gas uint64, contract interface{}) ui
 // Convert float to long
 type F2L struct{ base.NoOperandsInstruction }
 
-func (self *F2L) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *F2L) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	stack := frame.OperandStack()
 	f := stack.PopFloat()
 	l := int64(f)

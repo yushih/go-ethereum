@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Boolean OR int
 type IOR struct{ base.NoOperandsInstruction }
 
-func (self *IOR) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *IOR) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopInt()
 	v1 := stack.PopInt()
@@ -18,7 +18,7 @@ func (self *IOR) Execute(frame *rtda.Frame, gas uint64, contract interface{}) ui
 // Boolean OR long
 type LOR struct{ base.NoOperandsInstruction }
 
-func (self *LOR) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *LOR) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	stack := frame.OperandStack()
 	v2 := stack.PopLong()
 	v1 := stack.PopLong()

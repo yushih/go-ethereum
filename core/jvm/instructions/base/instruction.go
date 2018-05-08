@@ -4,7 +4,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 
 type Instruction interface {
 	FetchOperands(reader *BytecodeReader)
-	Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64
+	Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64
 }
 
 type NoOperandsInstruction struct {

@@ -13,7 +13,7 @@ func init() {
 
 // public static native int floatToRawIntBits(float value);
 // (F)I
-func floatToRawIntBits(frame *rtda.Frame, gas uint64, contract interface{}) {
+func floatToRawIntBits(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	value := frame.LocalVars().GetFloat(0)
 	bits := math.Float32bits(value) // todo
 	frame.OperandStack().PushInt(int32(bits))
@@ -21,7 +21,7 @@ func floatToRawIntBits(frame *rtda.Frame, gas uint64, contract interface{}) {
 
 // public static native float intBitsToFloat(int bits);
 // (I)F
-func intBitsToFloat(frame *rtda.Frame, gas uint64, contract interface{}) {
+func intBitsToFloat(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	bits := frame.LocalVars().GetInt(0)
 	value := math.Float32frombits(uint32(bits)) // todo
 	frame.OperandStack().PushFloat(value)

@@ -21,7 +21,7 @@ func init() {
 
 // public static native void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
 // (Ljava/lang/Object;ILjava/lang/Object;II)V
-func arraycopy(frame *rtda.Frame, gas uint64, contract interface{}) {
+func arraycopy(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	vars := frame.LocalVars()
 	src := vars.GetRef(0)
 	srcPos := vars.GetInt(1)
@@ -60,7 +60,7 @@ func checkArrayCopy(src, dest *heap.Object) bool {
 
 // private static native Properties initProperties(Properties props);
 // (Ljava/util/Properties;)Ljava/util/Properties;
-func initProperties(frame *rtda.Frame, gas uint64, contract interface{}) {
+func initProperties(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	vars := frame.LocalVars()
 	props := vars.GetRef(0)
 
@@ -111,7 +111,7 @@ func _sysProps() map[string]string {
 
 // private static native void setIn0(InputStream in);
 // (Ljava/io/InputStream;)V
-func setIn0(frame *rtda.Frame, gas uint64, contract interface{}) {
+func setIn0(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	vars := frame.LocalVars()
 	in := vars.GetRef(0)
 
@@ -121,7 +121,7 @@ func setIn0(frame *rtda.Frame, gas uint64, contract interface{}) {
 
 // private static native void setOut0(PrintStream out);
 // (Ljava/io/PrintStream;)V
-func setOut0(frame *rtda.Frame, gas uint64, contract interface{}) {
+func setOut0(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	vars := frame.LocalVars()
 	out := vars.GetRef(0)
 
@@ -131,7 +131,7 @@ func setOut0(frame *rtda.Frame, gas uint64, contract interface{}) {
 
 // private static native void setErr0(PrintStream err);
 // (Ljava/io/PrintStream;)V
-func setErr0(frame *rtda.Frame, gas uint64, contract interface{}) {
+func setErr0(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	vars := frame.LocalVars()
 	err := vars.GetRef(0)
 
@@ -141,12 +141,12 @@ func setErr0(frame *rtda.Frame, gas uint64, contract interface{}) {
 
 // public static native long currentTimeMillis();
 // ()J
-func currentTimeMillis(frame *rtda.Frame, gas uint64, contract interface{}) {
+func currentTimeMillis(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	millis := time.Now().UnixNano() / int64(time.Millisecond)
 	stack := frame.OperandStack()
 	stack.PushLong(millis)
 }
 
-func nanoTime(frame *rtda.Frame, gas uint64, contract interface{}) {
+func nanoTime(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
      frame.OperandStack().PushLong(time.Now().UnixNano())
 }

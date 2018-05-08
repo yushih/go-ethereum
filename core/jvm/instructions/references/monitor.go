@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 type MONITOR_ENTER struct{ base.NoOperandsInstruction }
 
 // todo
-func (self *MONITOR_ENTER) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *MONITOR_ENTER) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	ref := frame.OperandStack().PopRef()
 	if ref == nil {
 		panic("java.lang.NullPointerException")
@@ -19,7 +19,7 @@ func (self *MONITOR_ENTER) Execute(frame *rtda.Frame, gas uint64, contract inter
 type MONITOR_EXIT struct{ base.NoOperandsInstruction }
 
 // todo
-func (self *MONITOR_EXIT) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *MONITOR_EXIT) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	ref := frame.OperandStack().PopRef()
 	if ref == nil {
 		panic("java.lang.NullPointerException")

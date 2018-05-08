@@ -20,31 +20,31 @@ func init() {
     native.Register(miscUnsafe, "unalignedAccess0", "()Z", unalignedAccess)
 }
 
-func unalignedAccess(frame *rtda.Frame, gas uint64, contract interface{}) {
+func unalignedAccess(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
      frame.OperandStack().PushBoolean(true)
 }
 
-func isBigEndian(frame *rtda.Frame, gas uint64, contract interface{}) {
+func isBigEndian(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
      frame.OperandStack().PushBoolean(false)
 }
 
 // public native int arrayBaseOffset(Class<?> type);
 // (Ljava/lang/Class;)I
-func arrayBaseOffset(frame *rtda.Frame, gas uint64, contract interface{}) {
+func arrayBaseOffset(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	stack := frame.OperandStack()
 	stack.PushInt(0) // todo
 }
 
 // public native int arrayIndexScale(Class<?> type);
 // (Ljava/lang/Class;)I
-func arrayIndexScale(frame *rtda.Frame, gas uint64, contract interface{}) {
+func arrayIndexScale(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	stack := frame.OperandStack()
 	stack.PushInt(1) // todo
 }
 
 // public native int addressSize();
 // ()I
-func addressSize(frame *rtda.Frame, gas uint64, contract interface{}) {
+func addressSize(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	// vars := frame.LocalVars()
 	// vars.GetRef(0) // this
 
@@ -54,7 +54,7 @@ func addressSize(frame *rtda.Frame, gas uint64, contract interface{}) {
 
 // public native long objectFieldOffset(Field field);
 // (Ljava/lang/reflect/Field;)J
-func objectFieldOffset(frame *rtda.Frame, gas uint64, contract interface{}) {
+func objectFieldOffset(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	vars := frame.LocalVars()
 	jField := vars.GetRef(1)
 
@@ -66,7 +66,7 @@ func objectFieldOffset(frame *rtda.Frame, gas uint64, contract interface{}) {
 
 // public final native boolean compareAndSwapObject(Object o, long offset, Object expected, Object x)
 // (Ljava/lang/Object;JLjava/lang/Object;Ljava/lang/Object;)Z
-func compareAndSwapObject(frame *rtda.Frame, gas uint64, contract interface{}) {
+func compareAndSwapObject(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	vars := frame.LocalVars()
 	obj := vars.GetRef(1)
 	fields := obj.Data()
@@ -109,7 +109,7 @@ func _casArr(objs []*heap.Object, offset int64, expected, newVal *heap.Object) b
 
 // public native boolean getInt(Object o, long offset);
 // (Ljava/lang/Object;J)I
-func getInt(frame *rtda.Frame, gas uint64, contract interface{}) {
+func getInt(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	vars := frame.LocalVars()
 	fields := vars.GetRef(1).Data()
 	offset := vars.GetLong(2)
@@ -128,7 +128,7 @@ func getInt(frame *rtda.Frame, gas uint64, contract interface{}) {
 
 // public final native boolean compareAndSwapInt(Object o, long offset, int expected, int x);
 // (Ljava/lang/Object;JII)Z
-func compareAndSwapInt(frame *rtda.Frame, gas uint64, contract interface{}) {
+func compareAndSwapInt(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	vars := frame.LocalVars()
 	fields := vars.GetRef(1).Data()
 	offset := vars.GetLong(2)
@@ -161,7 +161,7 @@ func compareAndSwapInt(frame *rtda.Frame, gas uint64, contract interface{}) {
 
 // public native Object getObject(Object o, long offset);
 // (Ljava/lang/Object;J)Ljava/lang/Object;
-func getObject(frame *rtda.Frame, gas uint64, contract interface{}) {
+func getObject(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	vars := frame.LocalVars()
 	fields := vars.GetRef(1).Data()
 	offset := vars.GetLong(2)
@@ -181,7 +181,7 @@ func getObject(frame *rtda.Frame, gas uint64, contract interface{}) {
 
 // public final native boolean compareAndSwapLong(Object o, long offset, long expected, long x);
 // (Ljava/lang/Object;JJJ)Z
-func compareAndSwapLong(frame *rtda.Frame, gas uint64, contract interface{}) {
+func compareAndSwapLong(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	vars := frame.LocalVars()
 	fields := vars.GetRef(1).Data()
 	offset := vars.GetLong(2)

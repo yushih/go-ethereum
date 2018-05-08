@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Branch if reference is null
 type IFNULL struct{ base.BranchInstruction }
 
-func (self *IFNULL) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *IFNULL) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	ref := frame.OperandStack().PopRef()
 	if ref == nil {
 		base.Branch(frame, self.Offset)
@@ -17,7 +17,7 @@ func (self *IFNULL) Execute(frame *rtda.Frame, gas uint64, contract interface{})
 // Branch if reference not null
 type IFNONNULL struct{ base.BranchInstruction }
 
-func (self *IFNONNULL) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *IFNONNULL) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	ref := frame.OperandStack().PopRef()
 	if ref != nil {
 		base.Branch(frame, self.Offset)

@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Return void from method
 type RETURN struct{ base.NoOperandsInstruction }
 
-func (self *RETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *RETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	frame.Thread().PopFrame()
     return 100
 }
@@ -14,7 +14,7 @@ func (self *RETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{})
 // Return reference from method
 type ARETURN struct{ base.NoOperandsInstruction }
 
-func (self *ARETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *ARETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	thread := frame.Thread()
 	currentFrame := thread.PopFrame()
 	invokerFrame := thread.TopFrame()
@@ -26,7 +26,7 @@ func (self *ARETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}
 // Return double from method
 type DRETURN struct{ base.NoOperandsInstruction }
 
-func (self *DRETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *DRETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	thread := frame.Thread()
 	currentFrame := thread.PopFrame()
 	invokerFrame := thread.TopFrame()
@@ -38,7 +38,7 @@ func (self *DRETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}
 // Return float from method
 type FRETURN struct{ base.NoOperandsInstruction }
 
-func (self *FRETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *FRETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	thread := frame.Thread()
 	currentFrame := thread.PopFrame()
 	invokerFrame := thread.TopFrame()
@@ -50,7 +50,7 @@ func (self *FRETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}
 // Return int from method
 type IRETURN struct{ base.NoOperandsInstruction }
 
-func (self *IRETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *IRETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	thread := frame.Thread()
 	currentFrame := thread.PopFrame()
 	invokerFrame := thread.TopFrame()
@@ -62,7 +62,7 @@ func (self *IRETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}
 // Return double from method
 type LRETURN struct{ base.NoOperandsInstruction }
 
-func (self *LRETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *LRETURN) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	thread := frame.Thread()
 	currentFrame := thread.PopFrame()
 	invokerFrame := thread.TopFrame()

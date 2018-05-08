@@ -2,11 +2,11 @@ package native
 
 import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 
-type NativeMethod func(frame *rtda.Frame, gas uint64, contract interface{})
+type NativeMethod func(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{})
 
 var registry = map[string]NativeMethod{}
 
-func emptyNativeMethod(frame *rtda.Frame, gas uint64, contract interface{}) {
+func emptyNativeMethod(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	// do nothing
 }
 

@@ -25,7 +25,7 @@ func init() {
 
 // private native Throwable fillInStackTrace(int dummy);
 // (I)Ljava/lang/Throwable;
-func fillInStackTrace(frame *rtda.Frame, gas uint64, contract interface{}) {
+func fillInStackTrace(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
 	this := frame.LocalVars().GetThis()
 	frame.OperandStack().PushRef(this)
 

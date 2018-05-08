@@ -7,7 +7,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
 // Create new object
 type NEW struct{ base.Index16Instruction }
 
-func (self *NEW) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *NEW) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	cp := frame.Method().Class().ConstantPool()
 	classRef := cp.GetConstant(self.Index).(*heap.ClassRef)
 	class := classRef.ResolvedClass()

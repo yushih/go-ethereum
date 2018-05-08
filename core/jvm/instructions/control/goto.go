@@ -6,7 +6,7 @@ import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 // Branch always
 type GOTO struct{ base.BranchInstruction }
 
-func (self *GOTO) Execute(frame *rtda.Frame, gas uint64, contract interface{}) uint64 {
+func (self *GOTO) Execute(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) uint64 {
 	base.Branch(frame, self.Offset)
     return 100
 }
