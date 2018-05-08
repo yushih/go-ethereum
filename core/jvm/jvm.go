@@ -106,22 +106,22 @@ func persist (obj *heap.Object, pathPrefix []uint, persistType bool, contractAdd
      }
 
      if obj.Class().IsArray() {
-         write(append(pathPrefix, ArrayLengthEntry), intToHash(int(obj.ArrayLength())), contractAddr, stateDB)
+         write(append(pathPrefix, ArrayLengthEntry), int32ToHash(obj.ArrayLength()), contractAddr, stateDB)
          var i uint
          for i=0; i<uint(obj.ArrayLength()); i++ {
              path := append(pathPrefix, i+SlotIndexOffset) 
 
              switch obj.Data().(type) {
              case []int8:
-                 write(path, intToHash(int(obj.Data().([]int8)[i])), contractAddr, stateDB)
+                 write(path, int8ToHash(obj.Data().([]int8)[i]), contractAddr, stateDB)
              case []int16:
-                 write(path, intToHash(int(obj.Data().([]int16)[i])), contractAddr, stateDB)
+                 write(path, int16ToHash(obj.Data().([]int16)[i]), contractAddr, stateDB)
              case []int32:
-                 write(path, intToHash(int(obj.Data().([]int32)[i])), contractAddr, stateDB)
+                 write(path, int32ToHash(obj.Data().([]int32)[i]), contractAddr, stateDB)
              case []int64:
-                 write(path, intToHash(int(obj.Data().([]int64)[i])), contractAddr, stateDB)
+                 write(path, int64ToHash(obj.Data().([]int64)[i]), contractAddr, stateDB)
              case []uint16:
-                 write(path, intToHash(int(obj.Data().([]uint16)[i])), contractAddr, stateDB)
+                 write(path, uint16ToHash(obj.Data().([]uint16)[i]), contractAddr, stateDB)
              case []float32:
                  write(path, floatToHash(obj.Data().([]float32)[i]), contractAddr, stateDB)
              case []float64:
@@ -152,15 +152,15 @@ func persist (obj *heap.Object, pathPrefix []uint, persistType bool, contractAdd
 
              path := append(pathPrefix, slotId+SlotIndexOffset) 
 
-             //todo optimize for Ljava/lang/String;
+             //todo optimize for Ljava/lang/String; and Lblockchain/types/Address;
 
-             switch descriptor[0] {             
+             switch descriptor[0] {
              case 'Z', 'B', 'C', 'S', 'I':
-                 write(path, intToHash(int(slots.GetInt(slotId))), contractAddr, stateDB)
+                 write(path, int32ToHash(slots.GetInt(slotId)), contractAddr, stateDB)
              case 'F':
                  write(path, floatToHash(slots.GetFloat(slotId)), contractAddr, stateDB)
              case 'J':
-                 write(path, intToHash(int(slots.GetLong(slotId))), contractAddr, stateDB)
+                 write(path, int64ToHash(slots.GetLong(slotId)), contractAddr, stateDB)
              case 'D':
                  write(path, doubleToHash(slots.GetDouble(slotId)), contractAddr, stateDB)
              case 'L':
@@ -340,10 +340,30 @@ func writeBytes(path []uint, bs []byte, contractAddr common.Address, stateDB int
      } 
  }
 
-func intToHash(i int) common.Hash {
+func uint64ToHash(i uint64) common.Hash {
      bs := make([]byte, 8)
-     binary.LittleEndian.PutUint64(bs, uint64(i))
+     binary.LittleEndian.PutUint64(bs, i)
      return common.BytesToHash(bs)
+}
+
+func int8ToHash(i int8) common.Hash {
+     return uint64ToHash(uint64(uint8(i))) //convert to uint8 first to avoid signed expansion
+}
+
+func int16ToHash(i int16) common.Hash {
+     return uint64ToHash(uint64(uint16(i)))
+}
+
+func int32ToHash(i int32) common.Hash {
+     return uint64ToHash(uint64(uint32(i)))
+}
+
+func int64ToHash(i int64) common.Hash {
+     return uint64ToHash(uint64(i))
+}
+
+func uint16ToHash(i uint16) common.Hash {
+     return uint64ToHash(uint64(i))
 }
 
 func hashToInt(h []byte) int {
