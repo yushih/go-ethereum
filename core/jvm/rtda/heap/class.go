@@ -244,3 +244,16 @@ func (self *Class) GetMethods(publicOnly bool) []*Method {
 	}
 	return methods
 }
+
+func (self *Class) GetPublicInstanceMethodByName(name string) *Method {
+	for c := self; c != nil; c = c.superClass {
+		for _, method := range c.methods {
+			if method.IsStatic() == false && 
+                method.IsPublic() == true && 
+                method.name == name  {
+				return method
+			}
+		}
+	}
+	return nil
+}

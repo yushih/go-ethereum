@@ -61,9 +61,13 @@ func (self *JVM) execContract(contractCode []byte, input []byte, contractAddr co
      gas := contract.Gas
      class := self.classLoader.LoadClassFromBytes(contractCode)
      methodName := string(input) //todo
-     method := class.GetInstanceMethod(methodName, "()V") //todo
+     method := class.GetPublicInstanceMethodByName(methodName);
      obj := class.NewObject()
      reincarnateObject(obj, contractAddr, stateDB)
+
+     // this frame will accept the return value
+     bogusFrame := rtda.NewBogusFrame()
+     self.mainThread.PushFrame(bogusFrame)
 
      frame := self.mainThread.NewFrame(method)
      self.mainThread.PushFrame(frame)
@@ -72,7 +76,37 @@ func (self *JVM) execContract(contractCode []byte, input []byte, contractAddr co
      if err == nil {
          persistObjectGraph(obj, contractAddr, stateDB)
      }
-     return nil, gasLeft, err
+
+     var ret []byte
+     switch method.ReturnTypeDescriptor()[0] {
+     case 'V':
+         ret = nil
+     case 'Z', 'B', 'C', 'S', 'I':
+         v := bogusFrame.OperandStack().PopInt()
+         ret = make([]byte, 4)
+         binary.LittleEndian.PutUint32(ret, uint32(v))
+     case 'F':
+         v := bogusFrame.OperandStack().PopFloat()
+         ret = make([]byte, 4)
+         binary.LittleEndian.PutUint32(ret, math.Float32bits(v))
+     case 'J':
+         v := bogusFrame.OperandStack().PopLong()
+         ret = make([]byte, 8)
+         binary.LittleEndian.PutUint64(ret, uint64(v))
+     case 'D':
+         v := bogusFrame.OperandStack().PopDouble()
+         ret = make([]byte, 8)
+         binary.LittleEndian.PutUint64(ret, math.Float64bits(v))
+     case 'L':
+         o := bogusFrame.OperandStack().PopRef()
+         if o.Class().Name()=="java/lang/String" {
+             ret = []byte(heap.GoString(o))
+         }
+     case '[':
+         //todo
+     default:
+     }
+     return ret, gasLeft, err
 }
 
 //todo optimize array storage

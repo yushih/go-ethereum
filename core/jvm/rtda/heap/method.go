@@ -187,3 +187,7 @@ func (self *Method) ExceptionTypes() []*Class {
 
 	return exClasses
 }
+
+func (self *Method) ReturnTypeDescriptor() string {
+     return self.parsedDescriptor.returnType
+}

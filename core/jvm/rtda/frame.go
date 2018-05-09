@@ -44,3 +44,12 @@ func (self *Frame) SetNextPC(nextPC int) {
 func (self *Frame) RevertNextPC() {
 	self.nextPC = self.thread.pc
 }
+
+func NewBogusFrame() *Frame {
+	return &Frame{
+		thread:       nil,
+		method:       nil,
+		localVars:    nil,
+		operandStack: newOperandStack(1), // for the return value
+	}
+}

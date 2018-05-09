@@ -46,8 +46,12 @@ func loop(thread *rtda.Thread, logInst bool, gas uint64, contract *Contract, evm
             return 0, ErrOutOfGas   
         } else {
             gas -= gasConsumed
-        }      
-		if thread.IsStackEmpty() {
+        }
+        if thread.IsStackEmpty() {
+            break
+        }
+		if f := thread.TopFrame(); f.Method()==nil {
+           // have reached the bogus frame for holding return value 
 			break
 		}
 	}
