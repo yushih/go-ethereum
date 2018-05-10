@@ -32,17 +32,19 @@ func newJVM() *JVM {
 var jvm = newJVM()
 
 func getJVM() *JVM {
-     return jvm
+     return &JVM{
+         classLoader: jvm.classLoader,
+         mainThread: rtda.NewThread(jvm.classLoader),
+     }
 }
 
 func (self *JVM) initVM() {
 	vmClass := self.classLoader.LoadClass("sun/misc/VM")
 	base.InitClass(self.mainThread, vmClass)
-	interpret(self.mainThread, false, math.MaxUint64, nil, nil) //todo
+	interpret(self.mainThread, false, nil, nil)
 }
 
 func (self *JVM) deploy(contractCode []byte, contractAddr common.Address, stateDB interf.StateDB, contract *Contract, evm *EVM) (uint64, error) {
-     gas := contract.Gas
      class := self.classLoader.LoadClassFromBytes(contractCode)
      obj := class.NewObject()
      
@@ -50,18 +52,24 @@ func (self *JVM) deploy(contractCode []byte, contractAddr common.Address, stateD
      frame := self.mainThread.NewFrame(method)
      self.mainThread.PushFrame(frame)
      frame.LocalVars().SetRef(0, obj)
-     gasLeft, err := interpret(self.mainThread, false, gas, contract, evm)
+     gasLeft, err := interpret(self.mainThread, false, contract, evm)
      if err == nil {
          persistObjectGraph(obj, contractAddr, stateDB)
      }
      return gasLeft, err
 }
 
-func (self *JVM) execContract(contractCode []byte, input []byte, contractAddr common.Address, stateDB interf.StateDB, contract *Contract, evm *EVM) ([]byte, uint64, error) {
-     gas := contract.Gas
-     class := self.classLoader.LoadClassFromBytes(contractCode)
-     methodName := string(input) //todo
+func (self *JVM) execContract(input []byte, contractAddr common.Address, stateDB interf.StateDB, contract *Contract, evm *EVM) ([]byte, uint64, error) {
+     class := self.classLoader.LoadClassFromBytes(contract.Code)
+     var methodName string
+     var suc bool
+     if methodName, input, suc = readString(input); !suc {
+         return nil, contract.Gas, ErrInput
+     }
      method := class.GetPublicInstanceMethodByName(methodName);
+     if method == nil {
+         return nil, contract.Gas, ErrMethodNotFound
+     }
      obj := class.NewObject()
      reincarnateObject(obj, contractAddr, stateDB)
 
@@ -72,9 +80,76 @@ func (self *JVM) execContract(contractCode []byte, input []byte, contractAddr co
      frame := self.mainThread.NewFrame(method)
      self.mainThread.PushFrame(frame)
      frame.LocalVars().SetRef(0, obj)
-     gasLeft, err := interpret(self.mainThread, false, gas, contract, evm)
+
+     for i, descriptor := range(method.ParameterTypeDescriptors()) {
+         switch descriptor[0] {
+         case 'I':
+            if len(input) < 4 {
+                return nil, contract.Gas, ErrInput
+            }
+            v := int32(binary.LittleEndian.Uint32(input[0:4]))
+            input = input[4:]
+            frame.LocalVars().SetInt(uint(i+1), v)
+         case 'B', 'Z':
+            if len(input) < 1 {
+                return nil, contract.Gas, ErrInput
+            }
+            v := int32(input[0])
+            input = input[1:]
+            frame.LocalVars().SetInt(uint(i+1), v)
+         case 'C', 'S':
+            if len(input) < 2 {
+                return nil, contract.Gas, ErrInput
+            }
+            v := int32(binary.LittleEndian.Uint16(input[0:2]))
+            input = input[2:]
+            frame.LocalVars().SetInt(uint(i+1), v)
+         case 'F':
+            if len(input) < 4 {
+                return nil, contract.Gas, ErrInput
+            }
+            v := math.Float32frombits(binary.LittleEndian.Uint32(input[0:4]))
+            input = input[4:]
+            frame.LocalVars().SetFloat(uint(i+1), v)
+         case 'D':
+            if len(input) < 8 {
+                return nil, contract.Gas, ErrInput
+            }
+            v := math.Float64frombits(binary.LittleEndian.Uint64(input[0:8]))
+            input = input[8:]
+            frame.LocalVars().SetDouble(uint(i+1), v)
+         case 'J':
+            if len(input) < 8 {
+                return nil, contract.Gas, ErrInput
+            }
+            v := int64(binary.LittleEndian.Uint64(input[0:8]))
+            input = input[8:]
+            frame.LocalVars().SetLong(uint(i+1), v)
+         case '[', 'L':
+             //todo support arrays and object (by class name and ctor args)
+             switch descriptor {
+             case "Lblockchain/types/Address;":
+                 addr := common.BytesToAddress(input[0:common.AddressLength])
+                 frame.LocalVars().SetRef(uint(i+1), interf.AddressToObject(addr, self.classLoader))
+                 input = input[common.AddressLength:]
+             case "Ljava/lang/String;":
+                 var s string
+                 if s, input, suc = readString(input); !suc {
+                     return nil, contract.Gas, ErrInput
+                  }
+                  frame.LocalVars().SetRef(uint(i+1), heap.JString(self.classLoader, s))
+             }
+         }// switch descriptor[0]
+     }
+     if len(input) !=0 {
+         return nil, contract.Gas, ErrInput
+     }
+
+     gasLeft, err := interpret(self.mainThread, false, contract, evm)
      if err == nil {
          persistObjectGraph(obj, contractAddr, stateDB)
+     } else {
+         return nil, gasLeft, err
      }
 
      var ret []byte
@@ -99,7 +174,7 @@ func (self *JVM) execContract(contractCode []byte, input []byte, contractAddr co
          binary.LittleEndian.PutUint64(ret, math.Float64bits(v))
      case 'L':
          o := bogusFrame.OperandStack().PopRef()
-         if o.Class().Name()=="java/lang/String" {
+         if o!=nil && o.Class().Name()=="java/lang/String" {
              ret = []byte(heap.GoString(o))
          }
      case '[':
@@ -107,6 +182,109 @@ func (self *JVM) execContract(contractCode []byte, input []byte, contractAddr co
      default:
      }
      return ret, gasLeft, err
+}
+
+func readString(bs []byte) (string, []byte, bool) {
+     for index, runeValue := range string(bs) {
+         if runeValue == 0 {
+             return string(bs[0:index]), bs[index+1:], true
+         }
+     }
+     return "", nil, false
+}
+
+func (self *JVM) internalExecContract(contractCode []byte, methodName string, args []*heap.Object, contractAddr common.Address, stateDB interf.StateDB, contract *Contract, evm *EVM, returnValueHandler func(*rtda.Frame, string))  (uint64, error) {
+
+     class := self.classLoader.LoadClassFromBytes(contractCode)
+     method := class.GetPublicInstanceMethodByName(methodName);
+     obj := class.NewObject()
+     reincarnateObject(obj, contractAddr, stateDB)
+
+     // this frame will accept the return value
+     bogusFrame := rtda.NewBogusFrame()
+     self.mainThread.PushFrame(bogusFrame)
+
+     frame := self.mainThread.NewFrame(method)
+     self.mainThread.PushFrame(frame)
+     frame.LocalVars().SetRef(0, obj)
+
+     if len(method.ParameterTypeDescriptors()) != len(args) {
+         return contract.Gas, ErrParameter
+     }
+
+     for _i, td := range(method.ParameterTypeDescriptors()) {
+         i := uint(_i)
+         switch td[0] {
+         case 'I':
+             o := args[i]
+             if o==nil || o.Class().Name() != "java/lang/Integer" {
+                 return contract.Gas, ErrParameter
+             }
+             v := heap.UnboxInt(o)
+             frame.LocalVars().SetInt(i+1, v)
+         case 'B':
+             o := args[i]
+             if o==nil || o.Class().Name() != "java/lang/Byte" {
+                 return contract.Gas, ErrParameter
+             }
+             v := heap.UnboxByte(o)
+             frame.LocalVars().SetInt(i+1, v)
+         case 'C':
+             o := args[i]
+             if o==nil || o.Class().Name() != "java/lang/Character" {
+                 return contract.Gas, ErrParameter
+             }
+             v := heap.UnboxChar(o)
+             frame.LocalVars().SetInt(i+1, v)
+         case 'S':
+             o := args[i]
+             if o==nil || o.Class().Name() != "java/lang/Short" {
+                 return contract.Gas, ErrParameter
+             }
+             v := heap.UnboxShort(o)
+             frame.LocalVars().SetInt(i+1, v)
+         case 'Z':
+             o := args[i]
+             if o==nil || o.Class().Name() != "java/lang/Boolean" {
+                 return contract.Gas, ErrParameter
+             }
+             v := heap.UnboxBool(o)
+             frame.LocalVars().SetInt(i+1, v)
+         case 'D':
+             o := args[i]
+             if o==nil || o.Class().Name() != "java/lang/Double" {
+                 return contract.Gas, ErrParameter
+             }
+             v := heap.UnboxDouble(o)
+             frame.LocalVars().SetDouble(i+1, v)
+         case 'F':
+             o := args[i]
+             if o==nil || o.Class().Name() != "java/lang/Float" {
+                 return contract.Gas, ErrParameter
+             }
+             v := heap.UnboxFloat(o)
+             frame.LocalVars().SetFloat(i+1, v)
+         case 'J':
+             o := args[i]
+             if o==nil || o.Class().Name() != "java/lang/Long" {
+                 return contract.Gas, ErrParameter
+             }
+             v := heap.UnboxLong(o)
+             frame.LocalVars().SetLong(i+1, v)
+         case '[', 'L':
+             frame.LocalVars().SetRef(i+1, args[i])
+         }
+     }
+
+     gasLeft, err := interpret(self.mainThread, false, contract, evm)
+     if err == nil {
+         persistObjectGraph(obj, contractAddr, stateDB)
+     } else {
+         return gasLeft, err
+     }
+
+      returnValueHandler(bogusFrame, method.ReturnTypeDescriptor())
+      return gasLeft, err
 }
 
 //todo optimize array storage

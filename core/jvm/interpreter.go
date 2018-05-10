@@ -1,14 +1,15 @@
 package jvm
 
 import "fmt"
+import "math"
 
 import "github.com/ethereum/go-ethereum/core/jvm/instructions"
 import "github.com/ethereum/go-ethereum/core/jvm/instructions/base"
 import "github.com/ethereum/go-ethereum/core/jvm/rtda"
 
-func interpret(thread *rtda.Thread, logInst bool, gas uint64, contract *Contract, evm *EVM) (uint64, error) {
+func interpret(thread *rtda.Thread, logInst bool, contract *Contract, evm *EVM) (uint64, error) {
 	defer catchErr(thread)
-    return loop(thread, logInst, gas, contract, evm)
+    return loop(thread, logInst, contract, evm)
 }
 
 func catchErr(thread *rtda.Thread) {
@@ -19,7 +20,13 @@ func catchErr(thread *rtda.Thread) {
 	}
 }
 
-func loop(thread *rtda.Thread, logInst bool, gas uint64, contract *Contract, evm *EVM) (uint64, error) {
+func loop(thread *rtda.Thread, logInst bool, contract *Contract, evm *EVM) (uint64, error) {
+    var gas uint64
+    if contract != nil {
+        gas = contract.Gas
+    } else {
+        gas = math.MaxUint64 // de facto unlimited
+    }
 	reader := &base.BytecodeReader{}
 	for {
 		frame := thread.CurrentFrame()

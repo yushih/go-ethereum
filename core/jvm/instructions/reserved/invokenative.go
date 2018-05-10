@@ -26,7 +26,24 @@ func (self *INVOKE_NATIVE) Execute(frame *rtda.Frame, gas uint64, contract inter
 		panic("java.lang.UnsatisfiedLinkError: " + methodInfo)
 	}
 
-  	nativeMethod(frame, gas, contract, evm)
+    gasLeft = nil
+    err = nil
 
-    return 100
+    nativeMethod(frame, gas, contract, evm)
+
+    if gasLeft != nil {
+        return gas - *gasLeft
+    } else {
+        return 100
+    }
+}
+
+//normally we should have nativeMethod return these but currently there is 
+//only one (blockchain.go/call) actually needs to so here is some hacking
+var gasLeft *uint64
+var err *error
+
+func SetGasAndError(g uint64, e error) {
+     gasLeft = &g
+     err = &e
 }

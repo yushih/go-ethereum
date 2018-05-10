@@ -24,6 +24,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/params"
+
+	"github.com/ethereum/go-ethereum/core/jvm/rtda/heap"
+     "github.com/ethereum/go-ethereum/core/jvm/rtda"
 )
 
 // emptyCodeHash is used by create to ensure deployment is disallowed to already
@@ -37,7 +40,6 @@ type (
 	// and is used by the BLOCKHASH EVM op code.
 	GetHashFunc func(uint64) common.Hash
 )
-
 
 // Context provides the EVM with auxiliary information. Once provided
 // it shouldn't be modified.
@@ -96,6 +98,7 @@ type EVM struct {
 	callGasTemp uint64
 }
 
+
 // NewEVM retutrns a new EVM . The returned EVM is not thread safe and should
 // only ever be used *once*.
 func NewEVM(ctx Context, statedb StateDB, chainConfig *params.ChainConfig, vmConfig Config) *EVM {
@@ -149,7 +152,7 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 	contract.SetCallCode(&addr, evm.StateDB.GetCodeHash(addr), evm.StateDB.GetCode(addr))
 
     //ret, err = run(evm, contract, input)
-    ret, gasLeft, err := getJVM().execContract(contract.Code, input, addr, evm.StateDB, contract, evm)
+    ret, gasLeft, err := getJVM().execContract(input, addr, evm.StateDB, contract, evm)
 
 	// When an error was returned by the EVM or when setting the creation code
 	// above we revert to the snapshot and consume any gas remaining. Additionally
@@ -161,6 +164,50 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 		}
 	}
 	return ret, gasLeft, err
+}
+
+func (evm *EVM) InternalCall(_caller interface{}, addr common.Address, methodName string, args []*heap.Object, gas uint64, value *big.Int, returnValueHandler func(*rtda.Frame, string)) (leftOverGas uint64, err error) {
+    caller := _caller.(ContractRef)
+	if evm.vmConfig.NoRecursion && evm.depth > 0 {
+		return gas, nil
+	}
+
+	// Fail if we're trying to execute above the call depth limit
+	if evm.depth > int(params.CallCreateDepth) {
+		return gas, ErrDepth
+	}
+	// Fail if we're trying to transfer more than the available balance
+	if !evm.Context.CanTransfer(evm.StateDB, caller.Address(), value) {
+		return gas, ErrInsufficientBalance
+	}
+
+	var (
+		to       = AccountRef(addr)
+		snapshot = evm.StateDB.Snapshot()
+	)
+	if !evm.StateDB.Exist(addr) {
+		evm.StateDB.CreateAccount(addr)
+	}
+	evm.Transfer(evm.StateDB, caller.Address(), to.Address(), value)
+
+	// Initialise a new contract and set the code that is to be used by the EVM.
+	// The contract is a scoped environment for this execution context only.
+	contract := NewContract(caller, to, value, gas)
+	contract.SetCallCode(&addr, evm.StateDB.GetCodeHash(addr), evm.StateDB.GetCode(addr))
+
+    //ret, err = run(evm, contract, input)
+    gasLeft, err := getJVM().internalExecContract(contract.Code, methodName, args, addr, evm.StateDB, contract, evm, returnValueHandler)
+
+	// When an error was returned by the EVM or when setting the creation code
+	// above we revert to the snapshot and consume any gas remaining. Additionally
+	// when we're in homestead this also counts for code storage gas errors.
+	if err != nil {
+		evm.StateDB.RevertToSnapshot(snapshot)
+		if err != errExecutionReverted {
+			contract.UseGas(contract.Gas)
+		}
+	}
+	return gasLeft, err
 }
 
 // CallCode executes the contract associated with the addr with the given input
@@ -348,7 +395,6 @@ func (evm *EVM) Create(caller ContractRef, code []byte, gas uint64, value *big.I
 
 // ChainConfig returns the environment's chain configuration
 func (evm *EVM) ChainConfig() *params.ChainConfig { return evm.chainConfig }
-
 
 // Config are the configuration options for the Interpreter
 type Config struct {

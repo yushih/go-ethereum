@@ -191,3 +191,7 @@ func (self *Method) ExceptionTypes() []*Class {
 func (self *Method) ReturnTypeDescriptor() string {
      return self.parsedDescriptor.returnType
 }
+
+func (self *Method) ParameterTypeDescriptors() []string {
+     return self.parsedDescriptor.parameterTypes
+}

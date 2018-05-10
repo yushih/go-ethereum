@@ -56,3 +56,33 @@ func (self *Object) GetIntVar(name, descriptor string) int32 {
 	slots := self.data.(Slots)
 	return slots.GetInt(field.slotId)
 }
+func (self *Object) GetFloatVar(name, descriptor string) float32 {
+	field := self.class.getField(name, descriptor, false)
+	slots := self.data.(Slots)
+	return slots.GetFloat(field.slotId)
+}
+func (self *Object) SetFloatVar(name, descriptor string, val float32) {
+	field := self.class.getField(name, descriptor, false)
+	slots := self.data.(Slots)
+	slots.SetFloat(field.slotId, val)
+}
+func (self *Object) GetDoubleVar(name, descriptor string) float64 {
+	field := self.class.getField(name, descriptor, false)
+	slots := self.data.(Slots)
+	return slots.GetDouble(field.slotId)
+}
+func (self *Object) SetDoubleVar(name, descriptor string, val float64) {
+	field := self.class.getField(name, descriptor, false)
+	slots := self.data.(Slots)
+	slots.SetDouble(field.slotId, val)
+}
+func (self *Object) GetLongVar(name, descriptor string) int64 {
+	field := self.class.getField(name, descriptor, false)
+	slots := self.data.(Slots)
+	return slots.GetLong(field.slotId)
+}
+func (self *Object) SetLongVar(name, descriptor string, val int64) {
+	field := self.class.getField(name, descriptor, false)
+	slots := self.data.(Slots)
+	slots.SetLong(field.slotId, val)
+}
