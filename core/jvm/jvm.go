@@ -129,6 +129,9 @@ func (self *JVM) execContract(input []byte, contractAddr common.Address, stateDB
              //todo support arrays and object (by class name and ctor args)
              switch descriptor {
              case "Lblockchain/types/Address;":
+                 if len(input) < common.AddressLength {
+                     return nil, contract.Gas, ErrInput
+                 }
                  addr := common.BytesToAddress(input[0:common.AddressLength])
                  frame.LocalVars().SetRef(uint(i+1), interf.AddressToObject(addr, self.classLoader))
                  input = input[common.AddressLength:]
