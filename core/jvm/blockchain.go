@@ -2,6 +2,8 @@ package jvm
 
 import (
     "math/big"
+    "bytes"
+    "hash/crc32"
 
     "github.com/ethereum/go-ethereum/core/jvm/native"
     "github.com/ethereum/go-ethereum/core/jvm/rtda"
@@ -22,6 +24,35 @@ func init() {
     native.Register("blockchain/types/Address", "balance", "()J", balance)
     native.Register("blockchain/types/Address", "transfer", "(J)V", transfer)
     native.Register("blockchain/types/Address", "call", "(Ljava/lang/String;J[Ljava/lang/Object;)Ljava/lang/Object;", call)
+    native.Register("blockchain/types/Address", "hashCode", "()I", hashCode)
+    native.Register("blockchain/types/Address", "equals", "(Ljava/lang/Object;)Z", equals)
+}
+
+//todo: handle nil this
+
+func equals(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
+     this := frame.LocalVars().GetThis()
+     obj := frame.LocalVars().GetRef(1)
+     if obj == nil {
+         frame.OperandStack().PushInt(0)
+     }
+     if obj.Class().Name() != "blockchain/types/Address" {
+         frame.OperandStack().PushInt(0)
+     }
+     eq := bytes.Equal(interf.GetAddressFromObject(this).Bytes(),
+                       interf.GetAddressFromObject(obj).Bytes())
+     if eq {
+         frame.OperandStack().PushInt(1)
+      } else {
+         frame.OperandStack().PushInt(0)
+      }
+}
+
+func hashCode(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
+     this := frame.LocalVars().GetThis()
+     bs := interf.GetAddressFromObject(this).Bytes()
+     hash := crc32.ChecksumIEEE(bs)
+     frame.OperandStack().PushInt(int32(hash))
 }
 
 func call(frame *rtda.Frame, gas uint64, contract interface{}, evm interface{}) {
