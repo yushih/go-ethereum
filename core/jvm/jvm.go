@@ -309,10 +309,15 @@ func persist (obj *heap.Object, pathPrefix []uint, persistType bool, contractAdd
      if obj == nil {
          writeBytes(append(pathPrefix, NullSignal), []byte{1}, contractAddr, stateDB)
          return
+     } else {
+         // Important! Otherwise may get a false null
+         writeBytes(append(pathPrefix, NullSignal), []byte{}, contractAddr, stateDB)         
      }
      if path, ok := persisted[obj]; ok {
          writeBytes(append(pathPrefix, RefEntry), pathToBytes(path), contractAddr, stateDB)
          return
+     } else {
+         writeBytes(append(pathPrefix, RefEntry), []byte{}, contractAddr, stateDB)
      }
      persisted[obj] = pathPrefix
 
